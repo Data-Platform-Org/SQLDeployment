@@ -1,6 +1,0 @@
-﻿CREATE PROCEDURE dbo.Table1_Create
-@param1 VARCHAR(100),@param2 VARCHAR(100),@param3 VARCHAR(100),@param4 VARCHAR(100)
-AS
-BEGIN
-    SELECT 'Table1_Create'
-END
