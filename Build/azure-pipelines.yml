@@ -55,10 +55,10 @@ stages:
       displayName: 'SQL Server 2017'
       variables:
         variables:
-        dockerimage: 'mcr.microsoft.com/mssql/server:2017-CU20-ubuntu-16.04'
+        dockerimage: 'mcr.microsoft.com/mssql/server:2017-latest'
         dockerpublishport: 1433
         dockername: sql2017
-        dockersqlpw: 'MyP@ssw0rd123'
+        dockersqlpw: 'MyP@ssw0rd12345'
         dacpacpath: /var/opt/cicd
         testresultpath: $(Build.Repository.LocalPath)/build/sql2017
         dacpacfile: $(dacpacpath)/$(database)-Tests.dacpac
