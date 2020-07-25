@@ -14,7 +14,7 @@ variables:
 
 trigger:
 - development
-- master
+- main
 
 stages:
 - stage: Build
