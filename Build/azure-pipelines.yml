@@ -27,15 +27,22 @@ stages:
 
       steps:
       - task: VSBuild@1
-        displayName: 'Build solution'
+        displayName: 'Build UnitTesting-Data project'
         inputs:
-          solution: '**\*.sln'
+          solution: UnitTesting-Data/UnitTesting-Data.sqlproj
+          configuration: $(configuration)
+
+      - task: VSBuild@1
+        displayName: 'Build UnitTesting-Tests project'
+        inputs:
+          solution: UnitTesting-Tests/UnitTesting-Tests.sqlproj
           configuration: $(configuration)
 
       - task: CopyFiles@2
         displayName: "Copy files to artifact directory"
         inputs:
           Contents: |
+            **\$(database)-Data\bin\$(configuration)\*.*
             **\$(database)-Tests\bin\$(configuration)\*.*
             **\*.publish.xml
           TargetFolder: '$(Build.ArtifactStagingDirectory)'
@@ -61,7 +68,8 @@ stages:
         dockersqlpw: 'MyP@ssw0rd12345'
         dacpacpath: /var/opt/cicd
         testresultpath: $(Build.Repository.LocalPath)/build/sql2017
-        dacpacfile: $(dacpacpath)/$(database)-Tests.dacpac
+        datadacpacfile: $(dacpacpath)/$(database)-Data.dacpac
+        testdacpacfile: $(dacpacpath)/$(database)-Tests.dacpac
         publishfile: $(dacpacpath)/$(database)-Tests.publish.xml
 
       pool:
@@ -111,14 +119,15 @@ stages:
               -d $(dockerimage)
 
       - task: Bash@3
-        displayName: 'Publish DACPAC'
+        displayName: 'Publish DACPACS'
         inputs:
           targetType: 'inline'
           script: |
             echo 'Get files in directory'
             sudo docker exec $(dockername) bash -c 'ls -la $(dacpacpath)'
 
-            sudo docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(dacpacfile) /pr:$(publishfile) /p:IncludeCompositeObjects=true'
+            sudo docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(datadacpacfile) /pr:$(publishfile) /p:IncludeCompositeObjects=true'
+            sudo docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(testdacpacfile) /pr:$(publishfile) /p:IncludeCompositeObjects=true'
 
       - task: PowerShell@2
         displayName: 'Run Tests'
@@ -143,7 +152,8 @@ stages:
         dockersqlpw: 'MyP@ssw0rd12345'
         dacpacpath: /var/opt/cicd
         testresultpath: $(Build.Repository.LocalPath)/build/sql2019
-        dacpacfile: $(dacpacpath)/$(database)-Tests.dacpac
+        datadacpacfile: $(dacpacpath)/$(database)-Data.dacpac
+        testdacpacfile: $(dacpacpath)/$(database)-Tests.dacpac
         publishfile: $(dacpacpath)/$(database)-Tests.publish.xml
 
       pool:
@@ -193,14 +203,15 @@ stages:
               -d $(dockerimage)
 
       - task: Bash@3
-        displayName: 'Publish DACPAC'
+        displayName: 'Publish DACPACS'
         inputs:
           targetType: 'inline'
           script: |
             echo 'Get files in directory'
             docker exec $(dockername) bash -c 'ls -la $(dacpacpath)'
 
-            docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(dacpacfile) /pr:$(publishfile) /p:IncludeCompositeObjects=true'
+            docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(datadacpacfile) /pr:$(publishfile) /p:IncludeCompositeObjects=true'
+            docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(testdacpacfile) /pr:$(publishfile) /p:IncludeCompositeObjects=true'
 
       - task: PowerShell@2
         displayName: 'Run Tests'
