@@ -12,10 +12,6 @@ variables:
   database: UnitTesting
   artifactname: Database
 
-trigger:
-- development
-- main
-
 stages:
 - stage: Build
 
