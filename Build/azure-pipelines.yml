@@ -168,8 +168,6 @@ stages:
       pool:
         vmImage: ubuntu-20.04
 
-        environment: 'SQL Saturday Iowa Production'
-
       steps:
       - task: PowerShell@2
         displayName: 'Prerequisites'
