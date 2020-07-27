@@ -70,7 +70,8 @@ stages:
         testresultpath: $(Build.Repository.LocalPath)/build/sql2017
         datadacpacfile: $(dacpacpath)/$(database)-Data.dacpac
         testdacpacfile: $(dacpacpath)/$(database)-Tests.dacpac
-        publishfile: $(dacpacpath)/$(database)-Tests.publish.xml
+        datapublishfile: $(dacpacpath)/$(database)-Data.publish.xml
+        testpublishfile: $(dacpacpath)/$(database)-Tests.publish.xml
 
       pool:
         vmImage: ubuntu-18.04
@@ -119,15 +120,22 @@ stages:
               -d $(dockerimage)
 
       - task: Bash@3
-        displayName: 'Publish DACPACS'
+        displayName: 'Publish Data DACPAC'
         inputs:
           targetType: 'inline'
           script: |
             echo 'Get files in directory'
             sudo docker exec $(dockername) bash -c 'ls -la $(dacpacpath)'
+            sudo docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(datadacpacfile) /pr:$(datapublishfile) /p:IncludeCompositeObjects=true'
 
-            sudo docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(datadacpacfile) /pr:$(publishfile) /p:IncludeCompositeObjects=true'
-            sudo docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(testdacpacfile) /pr:$(publishfile) /p:IncludeCompositeObjects=true'
+      - task: Bash@3
+        displayName: 'Publish Test DACPAC'
+        inputs:
+          targetType: 'inline'
+          script: |
+            echo 'Get files in directory'
+            sudo docker exec $(dockername) bash -c 'ls -la $(dacpacpath)'
+            sudo docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(testdacpacfile) /pr:$(testpublishfile) /p:IncludeCompositeObjects=true'
 
       - task: PowerShell@2
         displayName: 'Run Tests'
@@ -154,7 +162,8 @@ stages:
         testresultpath: $(Build.Repository.LocalPath)/build/sql2019
         datadacpacfile: $(dacpacpath)/$(database)-Data.dacpac
         testdacpacfile: $(dacpacpath)/$(database)-Tests.dacpac
-        publishfile: $(dacpacpath)/$(database)-Tests.publish.xml
+        datapublishfile: $(dacpacpath)/$(database)-Data.publish.xml
+        testpublishfile: $(dacpacpath)/$(database)-Tests.publish.xml
 
       pool:
         vmImage: ubuntu-18.04
@@ -203,15 +212,22 @@ stages:
               -d $(dockerimage)
 
       - task: Bash@3
-        displayName: 'Publish DACPACS'
+        displayName: 'Publish Data DACPAC'
+        inputs:
+          targetType: 'inline'
+          script: |
+            echo 'Get files in directory'
+            sudo docker exec $(dockername) bash -c 'ls -la $(dacpacpath)'
+            sudo docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(datadacpacfile) /pr:$(datapublishfile) /p:IncludeCompositeObjects=true'
+
+      - task: Bash@3
+        displayName: 'Publish Test DACPAC'
         inputs:
           targetType: 'inline'
           script: |
             echo 'Get files in directory'
             docker exec $(dockername) bash -c 'ls -la $(dacpacpath)'
-
-            docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(datadacpacfile) /pr:$(publishfile) /p:IncludeCompositeObjects=true'
-            docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(testdacpacfile) /pr:$(publishfile) /p:IncludeCompositeObjects=true'
+            docker exec $(dockername) bash -c '/var/opt/sqlpackage/sqlpackage /a:Publish /tsn:localhost /tdn:$(database) /tu:sa /tp:"$(dockersqlpw)" /sf:$(testdacpacfile) /pr:$(testpublishfile) /p:IncludeCompositeObjects=true'
 
       - task: PowerShell@2
         displayName: 'Run Tests'
