@@ -319,7 +319,7 @@ stages:
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
 
 - stage: Production
-  displayName: 'Production Servers'
+  displayName: 'Production'
 
   jobs:
     - job: 'Deploy2019'
