@@ -56,7 +56,7 @@ stages:
           ArtifactName: $(artifactname)
           publishLocation: 'Container'
 - stage: Test
-
+  displayName: 'Unit Tests'
   jobs:
     - job: 'Linux2017'
       displayName: 'SQL Server 2017'
@@ -274,6 +274,44 @@ stages:
           TargetMethod: 'server'
           ServerName: 'localhost,1443'
           DatabaseName: 'SQLSatIowa-Integration'
+          AuthScheme: 'sqlServerAuthentication'
+          SqlUsername: 'sa'
+          SqlPassword: $(sqlsapw)
+          PublishProfile: $(datapublishfile)
+          AdditionalArguments: '/p:IncludeCompositeObjects=true'
+
+- stage: Acceptance
+  displayName: 'User Acceptance Tests'
+
+  jobs:
+    - job: 'Deploy2019'
+      displayName: 'Deploy SQL Server 2019'
+      variables:
+        variables:
+        agentpool: 'Azure DevOps Duet'
+        dacpacpath: $(System.ArtifactsDirectory)/$(artifactname)
+        datadacpacfile: $(database)-Data.dacpac
+        datapublishfile: $(dacpacpath)/$(database)-Data.publish.xml
+
+
+      pool: $(agentpool)
+        
+      steps:
+      - task: DownloadBuildArtifacts@0
+        displayName: 'Dowload Artifacts'
+        inputs:
+          buildType: 'current'
+          downloadType: 'specific'
+          downloadPath: '$(System.ArtifactsDirectory)'
+
+      - task: SqlDacpacDeploymentOnMachineGroup@0
+        displayName: 'Install DACPAC'
+        inputs:
+          TaskType: 'dacpac'
+          DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
+          TargetMethod: 'server'
+          ServerName: 'localhost,1444'
+          DatabaseName: 'SQLSatIowa-UAT'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
