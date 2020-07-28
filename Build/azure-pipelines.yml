@@ -56,7 +56,7 @@ stages:
           ArtifactName: $(artifactname)
           publishLocation: 'Container'
 - stage: Test
-  displayName: 'Unit Tests'
+  displayName: 'Unit Testing'
   jobs:
     - job: 'Linux2017'
       displayName: 'SQL Server 2017'
@@ -243,7 +243,7 @@ stages:
           testRunTitle: 'SQL Server 2019'
 
 - stage: Integration
-  displayName: 'Integration Tests'
+  displayName: 'Integration environment'
 
   jobs:
     - job: 'Deploy2019'
