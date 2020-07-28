@@ -243,7 +243,7 @@ stages:
           testRunTitle: 'SQL Server 2019'
 
 - stage: Integration
-  displayName: 'Integration environment'
+  displayName: 'Integration'
 
   jobs:
     - job: 'Deploy2019'
