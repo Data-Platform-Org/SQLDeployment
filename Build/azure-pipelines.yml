@@ -187,3 +187,42 @@ stages:
           SqlPassword: $(sqlsapw)
           PublishProfile: $(datapublishfile)
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
+
+- stage: Staging
+  displayName: 'Staging'
+
+  jobs:
+    - job: 'Deploy2019'
+      displayName: 'Deploy SQL Server 2019'
+      variables:
+        variables:
+        agentpool: 'Azure DevOps Duet'
+        dacpacpath: $(System.ArtifactsDirectory)/$(artifactname)
+        datadacpacfile: $(database)-Data.dacpac
+        datapublishfile: $(dacpacpath)/$(database)-Data.publish.xml
+
+
+      pool: $(agentpool)
+        
+      steps:
+      - task: DownloadBuildArtifacts@0
+        displayName: 'Dowload Artifacts'
+        inputs:
+          buildType: 'current'
+          downloadType: 'specific'
+          downloadPath: '$(System.ArtifactsDirectory)'
+
+      - task: SqlDacpacDeploymentOnMachineGroup@0
+        displayName: 'Install DACPAC'
+        inputs:
+          TaskType: 'dacpac'
+          DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
+          TargetMethod: 'server'
+          ServerName: 'localhost,1444'
+          DatabaseName: 'Florida-Staging'
+          AuthScheme: 'sqlServerAuthentication'
+          SqlUsername: 'sa'
+          SqlPassword: $(sqlsapw)
+          PublishProfile: $(datapublishfile)
+          AdditionalArguments: '/p:IncludeCompositeObjects=true'
+          
