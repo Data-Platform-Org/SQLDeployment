@@ -266,18 +266,4 @@ stages:
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
 
 
-      - task: SqlDacpacDeploymentOnMachineGroup@0
-        displayName: 'Install DACPAC on Prod2'
-        inputs:
-          TaskType: 'dacpac'
-          DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
-          TargetMethod: 'server'
-          ServerName: 'localhost,1445'
-          DatabaseName: 'Florida-Prod2'
-          AuthScheme: 'sqlServerAuthentication'
-          SqlUsername: 'sa'
-          SqlPassword: $(sqlsapw)
-          PublishProfile: $(datapublishfile)
-          AdditionalArguments: '/p:IncludeCompositeObjects=true'
-
 
