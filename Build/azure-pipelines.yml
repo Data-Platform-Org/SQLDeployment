@@ -182,7 +182,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1443'
-          DatabaseName: 'SQLSatIowa-Integration'
+          DatabaseName: 'Florida-Integration'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -220,7 +220,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1444'
-          DatabaseName: 'SQLSatIowa-Staging'
+          DatabaseName: 'Florida-Staging'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -258,7 +258,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1445'
-          DatabaseName: 'SQLSatIowa-Prod1'
+          DatabaseName: 'Florida-Prod1'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -273,7 +273,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1445'
-          DatabaseName: 'SQLSatIowa-Prod2'
+          DatabaseName: 'Florida-Prod2'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
