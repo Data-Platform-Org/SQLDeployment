@@ -302,14 +302,7 @@ stages:
         inputs:
           buildType: 'current'
           downloadType: 'specific'
-          downloadPath: '$(System.ArtifactsDirectory)'
-
-      - task: CopyFiles@2
-        displayName: "Copy files to special artifact directory"
-        inputs:
-          Contents: |
-            $(System.ArtifactsDirectory)\*.*
-          TargetFolder: '$(artifactsfolder)'
+          downloadPath: '$(artifactsfolder)'
 
       - task: PowerShell@2
         displayName: 'Run git PowerShell script'
