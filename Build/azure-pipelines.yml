@@ -303,7 +303,7 @@ stages:
           script: |
             # Write your PowerShell commands here.
             
-            Copy-Item -Path "D:\agents\sanderduet\_work\4\a\Database*" -Destination "D:\Published dacpac" -Recurse
+            Copy-Item -Path "D:\agents\sanderduet\_work\4\a\Database\*" -Destination "D:\Published dacpac" -Recurse
 
       - task: PowerShell@2
         displayName: 'Run git PowerShell script'
