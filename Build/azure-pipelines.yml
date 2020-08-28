@@ -280,7 +280,6 @@ stages:
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
 
 - stage: GitHub
-  dependsOn: Test
   displayName: 'Sync to GitHub'
 
   jobs:
@@ -289,7 +288,6 @@ stages:
       variables:
         variables:
         agentpool: 'Azure DevOps Duet'
-        dacpacdestination: 'D:\Published D:\Published artifacts'
 
       pool: $(agentpool)
         
@@ -297,12 +295,13 @@ stages:
       - checkout: self
         persistCredentials: true
 
-      - task: DownloadBuildArtifacts@0
-        displayName: 'Dowload Artifacts'
+      - task: PowerShell@2
         inputs:
-          buildType: 'current'
-          downloadType: 'specific'
-          downloadPath: '$(dacpacdestination)'
+          targetType: 'inline'
+          script: |
+            # Write your PowerShell commands here.
+            
+            Copy-Item -Path "D:\agents\sanderduet\_work\4\a\Database\*" -Destination "D:\Published dacpac" -Recurse
 
       - task: PowerShell@2
         displayName: 'Run git PowerShell script'
