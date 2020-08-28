@@ -6,8 +6,12 @@ jobs:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v1
-    # find where the dacpac is downloaded, make sure it's where i think it is
-    - name: find dacpac
+    # find out which directory initially in
+    - name: find location
       run: |
-        cd DatabaseProjectOslodb\bin\Debug
         ls
+    # call sqlpackage.exe to deploy my db schema using my dacpac
+    - name: update database schema using dacpac
+      run: |
+        cd 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\150'
+        ./sqlpackage.exe /Action:Publish /SourceFile:"D:\Published artifacts\Database\UnitTesting-Data.dacpac" /TargetConnectionString:"${{ secrets.PROD_SQL_CONNECTION_STRING }}" /p:BlockOnPossibleDataLoss=False /d
