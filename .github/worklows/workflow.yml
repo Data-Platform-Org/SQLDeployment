@@ -1,0 +1,13 @@
+# .github/workflows/sql-deploy.yml
+on: [push]
+
+jobs:
+  deploySQLSatOsloDB:
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v1
+    # find where the dacpac is downloaded, make sure it's where i think it is
+    - name: find dacpac
+      run: |
+        cd DatabaseProjectOslodb\bin\Debug
+        ls
