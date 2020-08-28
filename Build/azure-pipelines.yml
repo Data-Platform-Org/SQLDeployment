@@ -280,7 +280,7 @@ stages:
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
 
 - stage: GitHub
-  dependsOn: Build
+  dependsOn: Test
   displayName: 'Sync to GitHub'
 
   jobs:
