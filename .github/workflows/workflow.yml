@@ -1,5 +1,8 @@
 # .github/workflows/sql-deploy.yml
-on: [push]
+on:
+  push:
+    branches: 
+      - main
 
 jobs:
   deploySQLSatOsloDB:
