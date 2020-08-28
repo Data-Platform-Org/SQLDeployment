@@ -1,4 +1,5 @@
 # .github/workflows/sql-deploy.yml
+name: Update SQL database
 on:
   push:
     branches: 
