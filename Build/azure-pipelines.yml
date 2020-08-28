@@ -281,7 +281,7 @@ stages:
 
 - stage: GitHub
   displayName: 'Sync to GitHub'
-  dependsOn: Build
+  dependsOn: Test
 
   jobs:
     - job: 'SyncGit'
