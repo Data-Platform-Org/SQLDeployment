@@ -289,6 +289,7 @@ stages:
       variables:
         variables:
         agentpool: 'Azure DevOps Duet'
+        dacpacdestination: 'D:\Published D:\Published artifacts'
 
       pool: $(agentpool)
         
@@ -296,14 +297,12 @@ stages:
       - checkout: self
         persistCredentials: true
 
-      - task: PowerShell@2
-        displayName: 'Copy artifacts to local agent'
+      - task: DownloadBuildArtifacts@0
+        displayName: 'Dowload Artifacts'
         inputs:
-          targetType: 'inline'
-          script: |
-            # Write your PowerShell commands here.
-            
-            Copy-Item -Path "D:\agents\sanderduet\_work\4\a\Database\*" -Destination "D:\Published dacpac" -Recurse
+          buildType: 'current'
+          downloadType: 'specific'
+          downloadPath: '$(dacpacdestination)'
 
       - task: PowerShell@2
         displayName: 'Run git PowerShell script'
