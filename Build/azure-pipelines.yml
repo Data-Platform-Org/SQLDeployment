@@ -11,6 +11,7 @@ variables:
   sqlinstance: localhost
   database: UnitTesting
   artifactname: Database
+  azureartifactname: AzureSQLDB
 
 trigger:
 - development
@@ -44,7 +45,8 @@ stages:
           Contents: |
             **\$(database)-Data\bin\$(configuration)\*.*
             **\$(database)-Tests\bin\$(configuration)\*.*
-            **\*.publish.xml
+            **\$(database)-Data\*.publish.xml
+            **\$(database)-Tests\*.publish.xml
           TargetFolder: '$(Build.ArtifactStagingDirectory)'
           FlattenFolders: true
           OverWrite: true
@@ -294,3 +296,71 @@ stages:
         displayName: 'Run git PowerShell script'
         inputs:
           filePath: '$(System.DefaultWorkingDirectory)\scripts\git.ps1'
+          
+- stage: Azure
+  dependsOn: Build
+  displayName: 'Deploy to Azure SQL DB'
+
+  jobs:
+    - job: 'BuildAzureSQLDB'
+      displayName: 'Build Azure SQL DB dacpac'
+      variables:
+        variables:
+        agentpool: 'Azure DevOps Duet'
+        sourcepath: $(database)-Data
+        destinationpath: $(azuredatabase)
+        dacpacpath: $(System.ArtifactsDirectory)/$(artifactname)
+        datadacpacfile: $(azuredatabase).dacpac
+        datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
+
+
+      pool: $(agentpool)
+        
+      steps:
+      - task: CopyFiles@2
+        displayName: "Copy FUnctions to Azure-Data directory"
+        inputs:
+          Contents: |
+            $(sourcepath)\Functions\**
+          TargetFolder: '$(destinationpath)\Functions'
+          FlattenFolders: true
+          OverWrite: true
+      - task: CopyFiles@2
+        displayName: "Copy Stored Procedures to Azure-Data directory"
+        inputs:
+          Contents: |
+            $(sourcepath)\Functions\**
+          TargetFolder: '$(destinationpath)\Functions'
+          FlattenFolders: true
+          OverWrite: true
+      - task: CopyFiles@2
+        displayName: "Copy Tables to Azure-Data directory"
+        inputs:
+          Contents: |
+            $(sourcepath)\Functions\**
+          TargetFolder: '$(destinationpath)\Functions'
+          FlattenFolders: true
+          OverWrite: true
+
+      - task: VSBuild@1
+        displayName: 'Build Azure-Data project'
+        inputs:
+          solution: $(sourcepath)/UnitTesting-Data.sqlproj
+          configuration: $(configuration)
+
+      - task: CopyFiles@2
+        displayName: "Copy files to artifact directory"
+        inputs:
+          Contents: |
+            **\$(sourcepath)\bin\$(configuration)\*.*
+            **\$(sourcepath)\*.publish.xml
+          TargetFolder: '$(Build.ArtifactStagingDirectory)\$(azureartifactname)'
+          FlattenFolders: true
+          OverWrite: true
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Azure SQL database artifact'
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(azureartifactname)'
+          ArtifactName: $(azureartifactname)
+          publishLocation: 'Container'
