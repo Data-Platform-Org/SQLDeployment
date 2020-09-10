@@ -296,10 +296,10 @@ stages:
         displayName: 'Run git PowerShell script'
         inputs:
           filePath: '$(System.DefaultWorkingDirectory)\scripts\git.ps1'
-          
-- stage: Azure
-  dependsOn: Test
-  displayName: 'Deploy to Azure SQL DB'
+
+- stage: AzureBuild
+  dependsOn: Build
+  displayName: 'Prepare files for Azure SQL DB'
 
   jobs:
     - job: 'BuildAzureSQLDB'
@@ -308,52 +308,62 @@ stages:
         variables:
         agentpool: 'Azure DevOps Duet'
         sourcepath: $(database)-Data
+        stagingarea: $(Build.ArtifactStagingDirectory)\staging
         destinationpath: $(azuredatabase)
         dacpacpath: $(System.ArtifactsDirectory)/$(artifactname)
         datadacpacfile: $(azuredatabase).dacpac
         datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
 
-
       pool: $(agentpool)
         
       steps:
       - task: CopyFiles@2
-        displayName: "Copy FUnctions to Azure-Data directory"
+        displayName: "Copy sqlproj to staging area for Azure-Data"
+        inputs:
+          Contents: |
+            $(azuredatabase)\**
+          TargetFolder: '$(stagingarea)'
+          FlattenFolders: true
+          OverWrite: true
+
+      - task: CopyFiles@2
+        displayName: "Copy FUnctions to staging area for Azure-Data"
         inputs:
           Contents: |
             $(sourcepath)\Functions\**
-          TargetFolder: '$(destinationpath)\Functions'
+          TargetFolder: '$(stagingarea)\Functions'
           FlattenFolders: true
           OverWrite: true
       - task: CopyFiles@2
-        displayName: "Copy Stored Procedures to Azure-Data directory"
+        displayName: "Copy Stored Procedures to staging area"
         inputs:
           Contents: |
-            $(sourcepath)\Functions\**
-          TargetFolder: '$(destinationpath)\Functions'
+            $(sourcepath)\Stored Procedures\**
+          TargetFolder: '$(stagingarea)\Stored Procedures'
           FlattenFolders: true
           OverWrite: true
       - task: CopyFiles@2
-        displayName: "Copy Tables to Azure-Data directory"
+        displayName: "Copy Tables to staging area"
         inputs:
           Contents: |
-            $(sourcepath)\Functions\**
-          TargetFolder: '$(destinationpath)\Functions'
+            $(sourcepath)\Tables\**
+          TargetFolder: '$(stagingarea)\Tables'
           FlattenFolders: true
           OverWrite: true
+
 
       - task: VSBuild@1
         displayName: 'Build Azure-Data project'
         inputs:
-          solution: $(sourcepath)/UnitTesting-Data.sqlproj
+          solution: $(stagingarea)/UnitTesting-Data.sqlproj
           configuration: $(configuration)
 
       - task: CopyFiles@2
         displayName: "Copy files to artifact directory"
         inputs:
           Contents: |
-            **\$(sourcepath)\bin\$(configuration)\*.*
-            **\$(sourcepath)\*.publish.xml
+            **\$(stagingarea)\bin\$(configuration)\*.*
+            **\$(stagingarea)\*.publish.xml
           TargetFolder: '$(Build.ArtifactStagingDirectory)\$(azureartifactname)'
           FlattenFolders: true
           OverWrite: true
@@ -361,6 +371,49 @@ stages:
       - task: PublishBuildArtifacts@1
         displayName: 'Publish Azure SQL database artifact'
         inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(azureartifactname)'
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
           ArtifactName: $(azureartifactname)
           publishLocation: 'Container'
+
+- stage: DeployAzureDB
+  dependsOn: AzureBuild
+  displayName: 'Deploy to Azure SQL DB'
+
+  jobs:
+    - job: 'Deploy2019'
+      displayName: 'Deploy Azure SQL DB'
+      variables:
+        variables:
+        agentpool: 'Azure DevOps Duet'
+        dacpacpath: $(System.ArtifactsDirectory)/$(azureartifactname)
+        datadacpacfile: $(dacpacpath)/staging/bin/release/$(database)-Data.dacpac
+        datapublishfile: $(dacpacpath)/staging/$(database)-Data.publish.xml
+
+
+      pool: $(agentpool)
+        
+      steps:
+      - task: DownloadBuildArtifacts@0
+        displayName: 'Dowload Artifacts'
+        inputs:
+          buildType: 'current'
+          downloadType: 'specific'
+          artifactName:  '$(azureartifactname)'
+          downloadPath: '$(System.ArtifactsDirectory)'
+
+      - task: SqlAzureDacpacDeployment@1
+        displayName: 'Install DACPAC on Azure SQL DB'
+        inputs:
+          azureSubscription: 'Visual Studio Professional(de86e7f8-bff9-483c-9b7f-da7cc53ebc80)'
+          AuthenticationType: 'server'
+          ServerName: 'neazureugsrv.database.windows.net'
+          DatabaseName: '$(azuredatabase)'
+          SqlUsername: '$(azureuser)'
+          SqlPassword: '$(azuresqlpw)'
+          deployType: 'DacpacTask'
+          DeploymentAction: 'Publish'
+          DacpacFile: '$(datadacpacfile)'
+          PublishProfile: '$(datapublishfile)'
+          AdditionalArguments: '/p:IncludeCompositeObjects=true'
+          IpDetectionMethod: 'AutoDetect'
+
