@@ -404,7 +404,7 @@ stages:
       - task: SqlAzureDacpacDeployment@1
         displayName: 'Install DACPAC on Azure SQL DB'
         inputs:
-          azureSubscription: 'Visual Studio Professional(de86e7f8-bff9-483c-9b7f-da7cc53ebc80)'
+          azureSubscription: 'KCAzure'
           AuthenticationType: 'server'
           ServerName: 'neazureugsrv.database.windows.net'
           DatabaseName: '$(azuredatabase)'
@@ -416,4 +416,5 @@ stages:
           PublishProfile: '$(datapublishfile)'
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
           IpDetectionMethod: 'AutoDetect'
+
 
