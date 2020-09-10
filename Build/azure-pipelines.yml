@@ -10,6 +10,7 @@ variables:
   configuration: release
   sqlinstance: localhost
   database: UnitTesting
+  azuredatabase: Azure-Data
   artifactname: Database
   azureartifactname: AzureSQLDB
 
