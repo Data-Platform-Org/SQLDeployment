@@ -298,7 +298,7 @@ stages:
           filePath: '$(System.DefaultWorkingDirectory)\scripts\git.ps1'
 
 - stage: AzureBuild
-  dependsOn: Test
+  dependsOn: Integration
   displayName: 'Prepare files for Azure SQL DB'
 
   jobs:
