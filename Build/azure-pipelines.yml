@@ -321,7 +321,7 @@ stages:
         displayName: "Copy sqlproj to staging area for Azure-Data"
         inputs:
           Contents: |
-            $(azuredatabase)\**
+            Azure-Data\**
           TargetFolder: '$(stagingarea)'
           FlattenFolders: true
           OverWrite: true
