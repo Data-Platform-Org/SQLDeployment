@@ -407,7 +407,7 @@ stages:
           azureSubscription: 'KCAzure'
           AuthenticationType: 'server'
           ServerName: 'neazureugsrv.database.windows.net'
-          DatabaseName: '$(azuredatabase)'
+          DatabaseName: $(azuredatabase)
           SqlUsername: '$(azureuser)'
           SqlPassword: '$(azuresqlpw)'
           deployType: 'DacpacTask'
