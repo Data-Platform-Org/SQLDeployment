@@ -337,7 +337,7 @@ stages:
             
             cd..
             cd a
-            cd staging
+            cd staging\$(database)-Data
             ls
            
             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider'
