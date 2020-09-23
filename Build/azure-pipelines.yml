@@ -324,8 +324,7 @@ stages:
         displayName: "Copy files to staging area for Azure-Data"
         inputs:
           Contents: |
-            $(Build.SourcesDirectory)\**
-            !azure-pipelines.yml
+            $(sourcepath)\**
           TargetFolder: '$(stagingarea)'
           FlattenFolders: false
           OverWrite: true
@@ -344,14 +343,15 @@ stages:
             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider'
             $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider'
             
-            rename-item kcdemodbproject.sqlproj kcdemoazureproject.sqlproj
+            rename-item UnitTesting-Data.sqlproj AzureDB.sqlproj
+            rename-item UnitTesting-Data.publish.xml AzureDB.publish.xml
             
             (Get-Content "kcdemoazureproject.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "kcdemoazureproject.sqlproj"
 
       - task: VSBuild@1
         displayName: 'Build Azure-Data project'
         inputs:
-          solution: $(stagingarea)/kcdemoazureproject.sqlproj
+          solution: $(stagingarea)/AzureDB.sqlproj
           configuration: $(configuration)
 
       - task: PublishBuildArtifacts@1
@@ -372,8 +372,8 @@ stages:
         variables:
         agentpool: 'Azure DevOps Duet'
         dacpacpath: $(System.ArtifactsDirectory)/$(azureartifactname)
-        datadacpacfile: $(dacpacpath)/staging/bin/release/$(database)-Data.dacpac
-        datapublishfile: $(dacpacpath)/staging/$(database)-Data.publish.xml
+        datadacpacfile: $(dacpacpath)/staging/bin/release/AzureDB.dacpac
+        datapublishfile: $(dacpacpath)/staging/AzureDB.publish.xml
 
 
       pool: $(agentpool)
