@@ -184,7 +184,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1443'
-          DatabaseName: 'NEAzureUG-Integration'
+          DatabaseName: 'SQLSatDenmark-Integration'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -222,7 +222,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1444'
-          DatabaseName: 'NEAzureUG-Staging'
+          DatabaseName: 'SQLSatDenmark-Staging'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -260,7 +260,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1445'
-          DatabaseName: 'NEAzureUG-Prod-AzureDevOps'
+          DatabaseName: 'SQLSatDenmark-Prod-AzureDevOps'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -315,64 +315,49 @@ stages:
         datadacpacfile: $(azuredatabase).dacpac
         datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
 
-      pool: $(agentpool)
+      pool:
+        vmImage: vs2017-win2016
         
       steps:
+
       - task: CopyFiles@2
-        displayName: "Copy sqlproj to staging area for Azure-Data"
+        displayName: "Copy files to staging area for Azure-Data"
         inputs:
           Contents: |
-            Azure-Data\**
+            $(Build.SourcesDirectory)\**
+            !azure-pipelines.yml
           TargetFolder: '$(stagingarea)'
-          FlattenFolders: true
+          FlattenFolders: false
           OverWrite: true
 
-      - task: CopyFiles@2
-        displayName: "Copy FUnctions to staging area for Azure-Data"
+      - task: PowerShell@2
         inputs:
-          Contents: |
-            $(sourcepath)\Functions\**
-          TargetFolder: '$(stagingarea)\Functions'
-          FlattenFolders: true
-          OverWrite: true
-      - task: CopyFiles@2
-        displayName: "Copy Stored Procedures to staging area"
-        inputs:
-          Contents: |
-            $(sourcepath)\Stored Procedures\**
-          TargetFolder: '$(stagingarea)\Stored Procedures'
-          FlattenFolders: true
-          OverWrite: true
-      - task: CopyFiles@2
-        displayName: "Copy Tables to staging area"
-        inputs:
-          Contents: |
-            $(sourcepath)\Tables\**
-          TargetFolder: '$(stagingarea)\Tables'
-          FlattenFolders: true
-          OverWrite: true
-
+          targetType: 'inline'
+          script: |
+            # Write your PowerShell commands here.
+            
+            ls
+            cd..
+            cd a
+            cd staging
+            
+            $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider'
+            $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider'
+            
+            rename-item kcdemodbproject.sqlproj kcdemoazureproject.sqlproj
+            
+            (Get-Content "kcdemoazureproject.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "kcdemoazureproject.sqlproj"
 
       - task: VSBuild@1
         displayName: 'Build Azure-Data project'
         inputs:
-          solution: $(stagingarea)/UnitTesting-Data.sqlproj
+          solution: $(stagingarea)/kcdemoazureproject.sqlproj
           configuration: $(configuration)
-
-      - task: CopyFiles@2
-        displayName: "Copy files to artifact directory"
-        inputs:
-          Contents: |
-            **\$(stagingarea)\bin\$(configuration)\*.*
-            **\$(stagingarea)\*.publish.xml
-          TargetFolder: '$(Build.ArtifactStagingDirectory)\$(azureartifactname)'
-          FlattenFolders: true
-          OverWrite: true
 
       - task: PublishBuildArtifacts@1
         displayName: 'Publish Azure SQL database artifact'
         inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          PathtoPublish: '$(stagingarea)\bin\$(configuration)'
           ArtifactName: $(azureartifactname)
           publishLocation: 'Container'
 
