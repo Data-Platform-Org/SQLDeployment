@@ -351,13 +351,13 @@ stages:
       - task: VSBuild@1
         displayName: 'Build Azure-Data project'
         inputs:
-          solution: $(stagingarea)/AzureDB.sqlproj
+          solution: $(stagingarea)/$(database)-Data/AzureDB.sqlproj
           configuration: $(configuration)
 
       - task: PublishBuildArtifacts@1
         displayName: 'Publish Azure SQL database artifact'
         inputs:
-          PathtoPublish: '$(stagingarea)\bin\$(configuration)'
+          PathtoPublish: '$(stagingarea)\$(database)-Data\bin\$(configuration)'
           ArtifactName: $(azureartifactname)
           publishLocation: 'Container'
 
