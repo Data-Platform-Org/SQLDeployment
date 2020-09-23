@@ -335,11 +335,11 @@ stages:
           script: |
             # Write your PowerShell commands here.
             
-            ls
             cd..
             cd a
             cd staging
-            
+            ls
+           
             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider'
             $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider'
             
