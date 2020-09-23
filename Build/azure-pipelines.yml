@@ -372,7 +372,7 @@ stages:
         variables:
         agentpool: 'Azure DevOps Duet'
         dacpacpath: $(System.ArtifactsDirectory)/$(azureartifactname)
-        datadacpacfile: $(dacpacpath)/staging/bin/release/AzureDB.dacpac
+        datadacpacfile: $(dacpacpath)/AzureDB.dacpac
         datapublishfile: $(dacpacpath)/staging/AzureDB.publish.xml
 
 
@@ -399,7 +399,6 @@ stages:
           deployType: 'DacpacTask'
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
-          PublishProfile: '$(datapublishfile)'
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
           IpDetectionMethod: 'AutoDetect'
 
