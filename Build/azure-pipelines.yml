@@ -346,7 +346,7 @@ stages:
             rename-item UnitTesting-Data.sqlproj AzureDB.sqlproj
             rename-item UnitTesting-Data.publish.xml AzureDB.publish.xml
             
-            (Get-Content "kcdemoazureproject.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "kcdemoazureproject.sqlproj"
+            (Get-Content "AzureDB.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureDB.sqlproj"
 
       - task: VSBuild@1
         displayName: 'Build Azure-Data project'
