@@ -392,7 +392,7 @@ stages:
         inputs:
           azureSubscription: 'KCAzure'
           AuthenticationType: 'server'
-          ServerName: 'neazureugsrv.database.windows.net'
+          ServerName: 'kcdemosrv.database.windows.net'
           DatabaseName: '$(azuredatabase)'
           SqlUsername: '$(azureuser)'
           SqlPassword: '$(azuresqlpw)'
