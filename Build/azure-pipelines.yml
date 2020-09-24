@@ -340,7 +340,7 @@ stages:
             cd staging\$(database)-Data
             ls
            
-            $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider'
+            $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
             $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider'
             
             rename-item UnitTesting-Data.sqlproj AzureDB.sqlproj
