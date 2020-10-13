@@ -184,7 +184,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1443'
-          DatabaseName: 'SQLSatDenmark-Integration'
+          DatabaseName: 'CroatiaDB-Integration'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -222,7 +222,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1444'
-          DatabaseName: 'SQLSatDenmark-Staging'
+          DatabaseName: 'CroatiaDB-Staging'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -260,7 +260,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1445'
-          DatabaseName: 'SQLSatDenmark-Prod-AzureDevOps'
+          DatabaseName: 'CroatiaDB-Prod-AzureDevOps'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
