@@ -184,7 +184,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1443'
-          DatabaseName: 'CroatiaDB-Integration'
+          DatabaseName: 'GroupBy-Integration'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -222,7 +222,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1444'
-          DatabaseName: 'CroatiaDB-Staging'
+          DatabaseName: 'GroupBy-Staging'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -260,7 +260,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1445'
-          DatabaseName: 'CroatiaDB-Prod-AzureDevOps'
+          DatabaseName: 'GroupBy-Prod-AzureDevOps'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -298,6 +298,7 @@ stages:
         inputs:
           filePath: '$(System.DefaultWorkingDirectory)\scripts\git.ps1'
 
+# Uses 'The Kevin Method'
 - stage: AzureBuild
   dependsOn: Integration
   displayName: 'Prepare files for Azure SQL DB'
@@ -322,6 +323,7 @@ stages:
 
       - task: CopyFiles@2
         displayName: "Copy files to staging area for Azure-Data"
+        # Copies the file to a sub folder in the artifacts directory
         inputs:
           Contents: |
             $(sourcepath)\**
@@ -330,6 +332,9 @@ stages:
           OverWrite: true
 
       - task: PowerShell@2
+        displayName: "Runs PowerShell to replace DSP"
+        # Renames the .sqlproj file
+        # Followed by the PowerShell to replace the Database Schema Provider
         inputs:
           targetType: 'inline'
           script: |
@@ -350,12 +355,14 @@ stages:
 
       - task: VSBuild@1
         displayName: 'Build Azure-Data project'
+        # Builds the specific project using the renamed .sqlproj file
         inputs:
           solution: $(stagingarea)/$(database)-Data/AzureDB.sqlproj
           configuration: $(configuration)
 
       - task: PublishBuildArtifacts@1
         displayName: 'Publish Azure SQL database artifact'
+        # Publishes the dacpac as part of an artifact within Azure DevOps
         inputs:
           PathtoPublish: '$(stagingarea)\$(database)-Data\bin\$(configuration)'
           ArtifactName: $(azureartifactname)
