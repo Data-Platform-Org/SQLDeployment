@@ -184,7 +184,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1443'
-          DatabaseName: 'GroupBy-Integration'
+          DatabaseName: 'DPS2020-Integration'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -222,7 +222,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1444'
-          DatabaseName: 'GroupBy-Staging'
+          DatabaseName: 'DPS2020-Staging'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -260,7 +260,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1445'
-          DatabaseName: 'GroupBy-Prod-AzureDevOps'
+          DatabaseName: 'DPS2020-Prod-AzureDevOps'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
