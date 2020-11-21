@@ -18,4 +18,4 @@ jobs:
     - name: update database schema using dacpac
       run: |
         cd 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\150'
-        ./sqlpackage.exe /Action:Publish /SourceFile:"D:\Published artifacts\Database\UnitTesting-Data.dacpac" /TargetConnectionString:"${{ secrets.PROD_SQL_CONNECTION_STRING }}" /p:BlockOnPossibleDataLoss=False /d
+        ./sqlpackage.exe /Action:Publish /SourceFile:"C:\repos\Published artifacts\Database" /TargetConnectionString:"${{ secrets.PROD_SQL_CONNECTION_STRING }}" /p:BlockOnPossibleDataLoss=False /d
