@@ -278,7 +278,7 @@ stages:
       variables:
         variables:
         agentpool: 'Azure DevOps Duet'
-        artifactsfolder: 'D:\Published artifacts'
+        artifactsfolder: 'C:\repos\Published artifacts'
 
       pool: $(agentpool)
         
