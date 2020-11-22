@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -55,77 +55,78 @@
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
-  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
-  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets"/>
   <ItemGroup>
-    <Folder Include="Properties" />
-    <Folder Include="Tables" />
-    <Folder Include="Stored Procedures" />
-    <Folder Include="Functions" />
+    <Folder Include="Properties"/>
+    <Folder Include="Tables"/>
+    <Folder Include="Stored Procedures"/>
+    <Folder Include="Functions"/>
   </ItemGroup>
   <ItemGroup>
-    <None Include="UnitTesting-Data.publish.xml" />
+    <None Include="UnitTesting-Data.publish.xml"/>
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Tables\Table1.sql" />
-    <Build Include="Tables\Table2.sql" />
-    <Build Include="Tables\Table3.sql" />
-    <Build Include="Tables\Table4.sql" />
-    <Build Include="Tables\Table5.sql" />
-    <Build Include="Tables\Table6.sql" />
-    <Build Include="Tables\Table7.sql" />
-    <Build Include="Tables\Table8.sql" />
-    <Build Include="Tables\Table9.sql" />
-    <Build Include="Tables\Table10.sql" />
-    <Build Include="Stored Procedures\Table1_Create.sql" />
-    <Build Include="Stored Procedures\Table1_Delete.sql" />
-    <Build Include="Stored Procedures\Table1_GetAll.sql" />
-    <Build Include="Stored Procedures\Table1_GetByID.sql" />
-    <Build Include="Stored Procedures\Table1_Update.sql" />
-    <Build Include="Stored Procedures\Table2_Create.sql" />
-    <Build Include="Stored Procedures\Table2_Delete.sql" />
-    <Build Include="Stored Procedures\Table2_GetAll.sql" />
-    <Build Include="Stored Procedures\Table2_GetByID.sql" />
-    <Build Include="Stored Procedures\Table2_Update.sql" />
-    <Build Include="Stored Procedures\Table3_Create.sql" />
-    <Build Include="Stored Procedures\Table3_Delete.sql" />
-    <Build Include="Stored Procedures\Table3_GetAll.sql" />
-    <Build Include="Stored Procedures\Table3_GetByID.sql" />
-    <Build Include="Stored Procedures\Table3_Update.sql" />
-    <Build Include="Stored Procedures\Table4_Create.sql" />
-    <Build Include="Stored Procedures\Table4_Delete.sql" />
-    <Build Include="Stored Procedures\Table4_GetAll.sql" />
-    <Build Include="Stored Procedures\Table4_GetByID.sql" />
-    <Build Include="Stored Procedures\Table4_Update.sql" />
-    <Build Include="Stored Procedures\Table5_Create.sql" />
-    <Build Include="Stored Procedures\Table5_Delete.sql" />
-    <Build Include="Stored Procedures\Table5_GetAll.sql" />
-    <Build Include="Stored Procedures\Table5_GetByID.sql" />
-    <Build Include="Stored Procedures\Table5_Update.sql" />
-    <Build Include="Stored Procedures\Table6_Create.sql" />
-    <Build Include="Stored Procedures\Table6_Delete.sql" />
-    <Build Include="Stored Procedures\Table6_GetAll.sql" />
-    <Build Include="Stored Procedures\Table6_GetByID.sql" />
-    <Build Include="Stored Procedures\Table6_Update.sql" />
-    <Build Include="Stored Procedures\Table7_Create.sql" />
-    <Build Include="Stored Procedures\Table7_Delete.sql" />
-    <Build Include="Stored Procedures\Table7_GetAll.sql" />
-    <Build Include="Stored Procedures\Table7_GetByID.sql" />
-    <Build Include="Stored Procedures\Table7_Update.sql" />
-    <Build Include="Stored Procedures\Table8_Create.sql" />
-    <Build Include="Stored Procedures\Table8_Delete.sql" />
-    <Build Include="Stored Procedures\Table8_GetAll.sql" />
-    <Build Include="Stored Procedures\Table8_GetByID.sql" />
-    <Build Include="Stored Procedures\Table8_Update.sql" />
-    <Build Include="Stored Procedures\Table9_Create.sql" />
-    <Build Include="Stored Procedures\Table9_Delete.sql" />
-    <Build Include="Stored Procedures\Table9_GetAll.sql" />
-    <Build Include="Stored Procedures\Table9_GetByID.sql" />
-    <Build Include="Stored Procedures\Table9_Update.sql" />
-    <Build Include="Stored Procedures\Table10_Create.sql" />
-    <Build Include="Stored Procedures\Table10_Delete.sql" />
-    <Build Include="Stored Procedures\Table10_GetAll.sql" />
-    <Build Include="Stored Procedures\Table10_GetByID.sql" />
-    <Build Include="Stored Procedures\Table10_Update.sql" />
+    <Build Include="Tables\Table1.sql"/>
+    <Build Include="Tables\Table2.sql"/>
+    <Build Include="Tables\Table3.sql"/>
+    <Build Include="Tables\Table4.sql"/>
+    <Build Include="Tables\Table5.sql"/>
+    <Build Include="Tables\Table6.sql"/>
+    <Build Include="Tables\Table7.sql"/>
+    <Build Include="Tables\Table8.sql"/>
+    <Build Include="Tables\Table9.sql"/>
+    <Build Include="Tables\Table10.sql"/>
+    <Build Include="Stored Procedures\Table1_Create.sql"/>
+    <Build Include="Stored Procedures\Table1_Delete.sql"/>
+    <Build Include="Stored Procedures\Table1_GetAll.sql"/>
+    <Build Include="Stored Procedures\Table1_GetByID.sql"/>
+    <Build Include="Stored Procedures\Table1_Update.sql"/>
+    <Build Include="Stored Procedures\Table2_Create.sql"/>
+    <Build Include="Stored Procedures\Table2_Delete.sql"/>
+    <Build Include="Stored Procedures\Table2_GetAll.sql"/>
+    <Build Include="Stored Procedures\Table2_GetByID.sql"/>
+    <Build Include="Stored Procedures\Table2_Update.sql"/>
+    <Build Include="Stored Procedures\Table3_Create.sql"/>
+    <Build Include="Stored Procedures\Table3_Delete.sql"/>
+    <Build Include="Stored Procedures\Table3_GetAll.sql"/>
+    <Build Include="Stored Procedures\Table3_GetByID.sql"/>
+    <Build Include="Stored Procedures\Table3_Update.sql"/>
+    <Build Include="Stored Procedures\Table4_Create.sql"/>
+    <Build Include="Stored Procedures\Table4_Delete.sql"/>
+    <Build Include="Stored Procedures\Table4_GetAll.sql"/>
+    <Build Include="Stored Procedures\Table4_GetByID.sql"/>
+    <Build Include="Stored Procedures\Table4_Update.sql"/>
+    <Build Include="Stored Procedures\Table5_Create.sql"/>
+    <Build Include="Stored Procedures\Table5_Delete.sql"/>
+    <Build Include="Stored Procedures\Table5_GetAll.sql"/>
+    <Build Include="Stored Procedures\Table5_GetByID.sql"/>
+    <Build Include="Stored Procedures\Table5_Update.sql"/>
+    <Build Include="Stored Procedures\Table6_Create.sql"/>
+    <Build Include="Stored Procedures\Table6_Delete.sql"/>
+    <Build Include="Stored Procedures\Table6_GetAll.sql"/>
+    <Build Include="Stored Procedures\Table6_GetByID.sql"/>
+    <Build Include="Stored Procedures\Table6_Update.sql"/>
+    <Build Include="Stored Procedures\Table7_Create.sql"/>
+    <Build Include="Stored Procedures\Table7_Delete.sql"/>
+    <Build Include="Stored Procedures\Table7_GetAll.sql"/>
+    <Build Include="Stored Procedures\Table7_GetByID.sql"/>
+    <Build Include="Stored Procedures\Table7_Update.sql"/>
+    <Build Include="Stored Procedures\Table8_Create.sql"/>
+    <Build Include="Stored Procedures\Table8_Delete.sql"/>
+    <Build Include="Stored Procedures\Table8_GetAll.sql"/>
+    <Build Include="Stored Procedures\Table8_GetByID.sql"/>
+    <Build Include="Stored Procedures\Table8_Update.sql"/>
+    <Build Include="Stored Procedures\Table9_Create.sql"/>
+    <Build Include="Stored Procedures\Table9_Delete.sql"/>
+    <Build Include="Stored Procedures\Table9_GetAll.sql"/>
+    <Build Include="Stored Procedures\Table9_GetByID.sql"/>
+    <Build Include="Stored Procedures\Table9_Update.sql"/>
+    <Build Include="Stored Procedures\Table10_Create.sql"/>
+    <Build Include="Stored Procedures\Table10_Delete.sql"/>
+    <Build Include="Stored Procedures\Table10_GetAll.sql"/>
+    <Build Include="Stored Procedures\Table10_GetByID.sql"/>
+    <Build Include="Stored Procedures\Table10_Update.sql"/>
+    <Build Include="Tables\dataMinds.sql"/>
   </ItemGroup>
 </Project>
