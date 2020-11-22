@@ -484,7 +484,7 @@ stages:
           publishLocation: 'Container'
 
 - stage: DeployAzurePool
-  dependsOn: BuildAzureSQLPool
+  dependsOn: AzurePoolBuild
   displayName: 'Azure SQL Pool Deploy'
 
   jobs:
