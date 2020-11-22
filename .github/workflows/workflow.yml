@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploySQLSatDenmarkDB:
+  deploydataMindsDB:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v1
