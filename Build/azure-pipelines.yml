@@ -13,6 +13,8 @@ variables:
   azuredatabase: Azure-Data
   artifactname: Database
   azureartifactname: AzureSQLDB
+  azuresyndatabase: kcsyndemodw
+  sqlpoolartifactname: AzureSQLPool
 
 trigger:
 - development
@@ -374,7 +376,7 @@ stages:
 
 - stage: DeployAzureDB
   dependsOn: AzureBuild
-  displayName: 'Deploy to Azure SQL DB'
+  displayName: 'Azure SQL DB Deploy'
 
   jobs:
     - job: 'Deploy2019'
@@ -413,4 +415,69 @@ stages:
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
           IpDetectionMethod: 'AutoDetect'
 
+- stage: AzurePoolBuild
+  dependsOn: Integration
+  displayName: 'Prepare files for SQL Pool'
 
+  jobs:
+    - job: 'BuildAzureSQLPool'
+      displayName: 'Build Azure SQL Pool dacpac'
+      variables:
+        variables:
+        agentpool: 'Azure DevOps Duet'
+        sourcepath: $(database)-Data
+        poolstagingarea: $(Build.ArtifactStagingDirectory)\poolstaging
+        destinationpath: $(azuredatabase)
+        dacpacpath: $(System.ArtifactsDirectory)/$(sqlpoolartifactname)
+        datadacpacfile: $(azuredatabase).dacpac
+        datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
+
+      pool:
+        vmImage: vs2017-win2016
+        
+      steps:
+
+      - task: CopyFiles@2
+        displayName: "Copy files to staging area for SQL Pool"
+        # Copies the file to a sub folder in the artifacts directory
+        inputs:
+          Contents: |
+            $(sourcepath)\**
+          TargetFolder: '$(poolstagingarea)'
+          FlattenFolders: false
+          OverWrite: true
+
+      - task: PowerShell@2
+        displayName: "Runs PowerShell to replace DSP"
+        # Renames the .sqlproj file
+        # Followed by the PowerShell to replace the Database Schema Provider
+        inputs:
+          targetType: 'inline'
+          script: |
+            # Write your PowerShell commands here.
+            
+            ls
+            cd $(poolstagingarea)\$(database)-Data
+           
+            $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
+            $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlDwDatabaseSchemaProvider'
+            
+            rename-item UnitTesting-Data.sqlproj AzureSQLPool.sqlproj
+            rename-item UnitTesting-Data.publish.xml AzureSQLPool.publish.xml
+            
+            (Get-Content "AzureSQLPool.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureSQLPool.sqlproj"
+
+      - task: VSBuild@1
+        displayName: 'Build Azure-Data project'
+        # Builds the specific project using the renamed .sqlproj file
+        inputs:
+          solution: $(poolstagingarea)/$(database)-Data/AzureSQLPool.sqlproj
+          configuration: $(configuration)
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Azure SQL database artifact'
+        # Publishes the dacpac as part of an artifact within Azure DevOps
+        inputs:
+          PathtoPublish: '$(poolstagingarea)\$(database)-Data\bin\$(configuration)'
+          ArtifactName: $(sqlpoolartifactname)
+          publishLocation: 'Container'
