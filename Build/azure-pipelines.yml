@@ -499,7 +499,7 @@ stages:
         datadacpacfile: $(dacpacpath)/AzureSQLMI.dacpac
         datapublishfile: $(dacpacpath)/staging/AzureSQLMI.publish.xml
 
-      pool: $(agentpool)
+      pool: windows-2019
         
       steps:
       - task: DownloadBuildArtifacts@0
