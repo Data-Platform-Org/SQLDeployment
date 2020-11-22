@@ -13,7 +13,7 @@ variables:
   azuredatabase: Azure-Data
   artifactname: Database
   azureartifactname: AzureSQLDB
-  azuremidatabase: AzureSQLPool
+  azuremidatabase: AzureSQLMI
   miartifactname: AzureSQLMI
   azuresyndatabase: AzureSQLPool
   sqlpoolartifactname: AzureSQLPool
@@ -306,6 +306,7 @@ stages:
             
             git push -u github head:main
 
+
 # Uses 'The Kevin Method'
 - stage: AzureBuild
   dependsOn: Integration
@@ -409,6 +410,113 @@ stages:
           AuthenticationType: 'server'
           ServerName: 'kcdemosrv.database.windows.net'
           DatabaseName: '$(azuredatabase)'
+          SqlUsername: '$(azureuser)'
+          SqlPassword: '$(azuresqlpw)'
+          deployType: 'DacpacTask'
+          DeploymentAction: 'Publish'
+          DacpacFile: '$(datadacpacfile)'
+          AdditionalArguments: '/p:IncludeCompositeObjects=true'
+          IpDetectionMethod: 'AutoDetect'
+
+- stage: AzureMIBuild
+  dependsOn: Integration
+  displayName: 'Prepare files for Managed Instance'
+
+  jobs:
+    - job: 'BuildAzureSQLPool'
+      displayName: 'Build Azure SQL Pool dacpac'
+      variables:
+        variables:
+        agentpool: 'Azure DevOps Duet'
+        sourcepath: $(database)-Data
+        mistagingarea: $(Build.ArtifactStagingDirectory)\mistaging
+        dacpacpath: $(System.ArtifactsDirectory)/$(miartifactname)
+        datadacpacfile: $(azuredatabase).dacpac
+        datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
+
+      # You need latest hosted windows image for this
+      pool:
+        vmImage: windows-2019
+        
+      steps:
+
+      - task: CopyFiles@2
+        displayName: "Copy files to staging area for SQL Pool"
+        # Copies the file to a sub folder in the artifacts directory
+        inputs:
+          Contents: |
+            $(sourcepath)\**
+          TargetFolder: '$(mistagingarea)'
+          FlattenFolders: false
+          OverWrite: true
+
+      - task: PowerShell@2
+        displayName: "Runs PowerShell to replace DSP"
+        # Renames the .sqlproj file
+        # Followed by the PowerShell to replace the Database Schema Provider
+        inputs:
+          targetType: 'inline'
+          script: |
+            # Write your PowerShell commands here.
+            
+            ls
+            cd $(mistagingarea)\$(database)-Data
+           
+            $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
+            $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider'
+            
+            rename-item UnitTesting-Data.sqlproj AzureSQLMI.sqlproj
+            rename-item UnitTesting-Data.publish.xml AzureSQLMI.publish.xml
+            
+            (Get-Content "AzureSQLMI.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureSQLMI.sqlproj"
+
+      - task: VSBuild@1
+        displayName: 'Build Azure-Data project'
+        # Builds the specific project using the renamed .sqlproj file
+        inputs:
+          solution: $(mistagingarea)/$(database)-Data/AzureSQLMI.sqlproj
+          configuration: $(configuration)
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Azure SQL Managed in artifact'
+        # Publishes the dacpac as part of an artifact within Azure DevOps
+        inputs:
+          PathtoPublish: '$(mistagingarea)\$(database)-Data\bin\$(configuration)'
+          ArtifactName: $(miartifactname)
+          publishLocation: 'Container'
+
+- stage: DeployAzureMI
+  dependsOn: AzureMIBuild
+  displayName: 'Managed Instance Deploy'
+
+  jobs:
+    - job: 'DeployMI'
+      displayName: 'Deploy Azure SQL Managed Instance'
+      variables:
+        variables:
+        agentpool: 'Azure DevOps Duet'
+        dacpacpath: $(System.ArtifactsDirectory)/$(miartifactname)
+        datadacpacfile: $(dacpacpath)/AzureSQLMI.dacpac
+        datapublishfile: $(dacpacpath)/staging/AzureSQLMI.publish.xml
+
+      pool: $(agentpool)
+        
+      steps:
+      - task: DownloadBuildArtifacts@0
+        displayName: 'Dowload Artifacts'
+        inputs:
+          buildType: 'current'
+          downloadType: 'specific'
+          artifactName:  '$(sqlpoolartifactname)'
+          downloadPath: '$(System.ArtifactsDirectory)'
+
+      - task: SqlAzureDacpacDeployment@1
+        displayName: 'Install DACPAC on Azure SQL DB'
+        inputs:
+          azureSubscription: 'KCAzure'
+          AuthenticationType: 'server'
+          ServerName: 'kcmidemomi.public.f2773380fce5.database.windows.net,3342'
+          DatabaseName: '$(azuremidatabase)'
           SqlUsername: '$(azureuser)'
           SqlPassword: '$(azuresqlpw)'
           deployType: 'DacpacTask'
@@ -526,70 +634,3 @@ stages:
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
           IpDetectionMethod: 'AutoDetect'
 
-
-- stage: AzureMIBuild
-  dependsOn: Integration
-  displayName: 'Prepare files for Managed Instance'
-
-  jobs:
-    - job: 'BuildAzureSQLPool'
-      displayName: 'Build Azure SQL Pool dacpac'
-      variables:
-        variables:
-        agentpool: 'Azure DevOps Duet'
-        sourcepath: $(database)-Data
-        mistagingarea: $(Build.ArtifactStagingDirectory)\mistaging
-        dacpacpath: $(System.ArtifactsDirectory)/$(miartifactname)
-        datadacpacfile: $(azuredatabase).dacpac
-        datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
-
-      # You need latest hosted windows image for this
-      pool:
-        vmImage: windows-2019
-        
-      steps:
-
-      - task: CopyFiles@2
-        displayName: "Copy files to staging area for SQL Pool"
-        # Copies the file to a sub folder in the artifacts directory
-        inputs:
-          Contents: |
-            $(sourcepath)\**
-          TargetFolder: '$(mistagingarea)'
-          FlattenFolders: false
-          OverWrite: true
-
-      - task: PowerShell@2
-        displayName: "Runs PowerShell to replace DSP"
-        # Renames the .sqlproj file
-        # Followed by the PowerShell to replace the Database Schema Provider
-        inputs:
-          targetType: 'inline'
-          script: |
-            # Write your PowerShell commands here.
-            
-            ls
-            cd $(mistagingarea)\$(database)-Data
-           
-            $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
-            $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider'
-            
-            rename-item UnitTesting-Data.sqlproj AzureSQLMI.sqlproj
-            rename-item UnitTesting-Data.publish.xml AzureSQLMI.publish.xml
-            
-            (Get-Content "AzureSQLMI.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureSQLMI.sqlproj"
-
-      - task: VSBuild@1
-        displayName: 'Build Azure-Data project'
-        # Builds the specific project using the renamed .sqlproj file
-        inputs:
-          solution: $(mistagingarea)/$(database)-Data/AzureSQLMI.sqlproj
-          configuration: $(configuration)
-
-      - task: PublishBuildArtifacts@1
-        displayName: 'Publish Azure SQL Managed in artifact'
-        # Publishes the dacpac as part of an artifact within Azure DevOps
-        inputs:
-          PathtoPublish: '$(mistagingarea)\$(database)-Data\bin\$(configuration)'
-          ArtifactName: $(miartifactname)
-          publishLocation: 'Container'
