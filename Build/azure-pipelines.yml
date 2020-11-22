@@ -13,7 +13,7 @@ variables:
   azuredatabase: Azure-Data
   artifactname: Database
   azureartifactname: AzureSQLDB
-  azuresyndatabase: kcsyndemodw
+  azuresyndatabase: AzureSQLPool
   sqlpoolartifactname: AzureSQLPool
 
 trigger:
@@ -432,6 +432,7 @@ stages:
         datadacpacfile: $(azuredatabase).dacpac
         datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
 
+      # You need latest hosted windows image for this
       pool:
         vmImage: windows-2019
         
@@ -481,3 +482,44 @@ stages:
           PathtoPublish: '$(poolstagingarea)\$(database)-Data\bin\$(configuration)'
           ArtifactName: $(sqlpoolartifactname)
           publishLocation: 'Container'
+
+- stage: DeployAzurePool
+  dependsOn: AzureBuild
+  displayName: 'Azure SQL Pool Deploy'
+
+  jobs:
+    - job: 'Deploy2019'
+      displayName: 'Deploy Azure SQL Pool'
+      variables:
+        variables:
+        agentpool: 'Azure DevOps Duet'
+        dacpacpath: $(System.ArtifactsDirectory)/$(sqlpoolartifactname)
+        datadacpacfile: $(dacpacpath)/AzureSQLPool.dacpac
+        datapublishfile: $(dacpacpath)/staging/AzureSQLPool.publish.xml
+
+
+      pool: $(agentpool)
+        
+      steps:
+      - task: DownloadBuildArtifacts@0
+        displayName: 'Dowload Artifacts'
+        inputs:
+          buildType: 'current'
+          downloadType: 'specific'
+          artifactName:  '$(sqlpoolartifactname)'
+          downloadPath: '$(System.ArtifactsDirectory)'
+
+      - task: SqlAzureDacpacDeployment@1
+        displayName: 'Install DACPAC on Azure SQL DB'
+        inputs:
+          azureSubscription: 'KCAzure'
+          AuthenticationType: 'server'
+          ServerName: 'kcsyndemows.sql.azuresynapse.net'
+          DatabaseName: '$(azuresyndatabase)'
+          SqlUsername: '$(azureuser)'
+          SqlPassword: '$(azuresqlpw)'
+          deployType: 'DacpacTask'
+          DeploymentAction: 'Publish'
+          DacpacFile: '$(datadacpacfile)'
+          AdditionalArguments: '/p:IncludeCompositeObjects=true'
+          IpDetectionMethod: 'AutoDetect'
