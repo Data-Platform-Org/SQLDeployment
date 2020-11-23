@@ -517,7 +517,7 @@ stages:
         inputs:
           azureSubscription: 'KCAzure'
           AuthenticationType: 'server'
-          ServerName: 'kcmidemomi.public.f2773380fce5.database.windows.net,3342'
+          ServerName: 'kcmidemomi.public.b2af48763bbf.database.windows.net,3342'
           DatabaseName: '$(azuremidatabase)'
           SqlUsername: '$(azureuser)'
           SqlPassword: '$(azuresqlpw)'
