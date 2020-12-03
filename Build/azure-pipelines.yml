@@ -73,7 +73,7 @@ stages:
         dockerpublishport: 1433
         dockername: sql2019
         dockersqlpw: 'MyP@ssw0rd12345'
-        dacpacpath: /var/opt/cicd
+        dacpacpath: $(System.ArtifactsDirectory)
         testresultpath: $(Build.Repository.LocalPath)\build\sql2019
         datadacpacfile: $(dacpacpath)\$(database)-Data.dacpac
         testdacpacfile: $(dacpacpath)\$(database)-Tests.dacpac
