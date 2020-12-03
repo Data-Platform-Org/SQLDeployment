@@ -2,6 +2,6 @@
 
 foreach ($module in $modules) {
     Write-Host "Installing $module" -ForegroundColor Cyan
-    Install-Module $module -Force -Scope CurrentUser -SkipPublisherCheck
+    if (-not (Get-Module -ListAvailable | Where-Object {$_.Name -eq $module})) {Install-Module $module -Force -SkipPublisherCheck}
     Import-Module $module -Force -PassThru
 }
