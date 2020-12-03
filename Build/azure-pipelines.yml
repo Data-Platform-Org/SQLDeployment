@@ -80,9 +80,10 @@ stages:
         datapublishfile: $(dacpacpath)/$(database)-Data.publish.xml
         testpublishfile: $(dacpacpath)/$(database)-Tests.publish.xml
         unittestinstance: localhost,1442
+        agentpool: 'Azure DevOps Duet'
 
       pool:
-        vmImage: ubuntu-latest
+        vmImage: $(agentpool)
 
       steps:
       - task: PowerShell@2
