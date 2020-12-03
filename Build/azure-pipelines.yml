@@ -134,7 +134,7 @@ stages:
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'JUnit'
-          testResultsFiles: '**\TEST-*.xml'
+          testResultsFiles: '$(testresultpath)\TEST-*.xml'
           failTaskOnFailedTests: true
           testRunTitle: 'SQL Server 2019'
           
