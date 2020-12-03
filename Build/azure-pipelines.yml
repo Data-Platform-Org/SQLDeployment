@@ -306,8 +306,7 @@ stages:
         datadacpacfile: $(azuredatabase).dacpac
         datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
 
-      pool:
-        vmImage: vs2017-win2016
+      pool: $(agentpool)
         
       steps:
 
@@ -416,8 +415,7 @@ stages:
         datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
 
       # You need latest hosted windows image for this
-      pool:
-        vmImage: windows-2019
+      pool: $(agentpool)
         
       steps:
 
@@ -481,8 +479,7 @@ stages:
         datapublishfile: $(dacpacpath)/staging/AzureSQLMI.publish.xml
 
       # You need latest hosted windows image for this
-      pool:
-        vmImage: windows-2019
+      pool: $(agentpool)
         
       steps:
       - task: DownloadBuildArtifacts@0
@@ -526,8 +523,7 @@ stages:
         datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
 
       # You need latest hosted windows image for this
-      pool:
-        vmImage: windows-2019
+      pool: $(agentpool)
         
       steps:
 
