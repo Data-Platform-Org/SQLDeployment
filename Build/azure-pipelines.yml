@@ -74,11 +74,11 @@ stages:
         dockername: sql2019
         dockersqlpw: 'MyP@ssw0rd12345'
         dacpacpath: /var/opt/cicd
-        testresultpath: $(Build.Repository.LocalPath)/build/sql2019
-        datadacpacfile: $(dacpacpath)/$(database)-Data.dacpac
-        testdacpacfile: $(dacpacpath)/$(database)-Tests.dacpac
-        datapublishfile: $(dacpacpath)/$(database)-Data.publish.xml
-        testpublishfile: $(dacpacpath)/$(database)-Tests.publish.xml
+        testresultpath: $(Build.Repository.LocalPath)\build\sql2019
+        datadacpacfile: $(dacpacpath)\$(database)-Data.dacpac
+        testdacpacfile: $(dacpacpath)\$(database)-Tests.dacpac
+        datapublishfile: $(dacpacpath)\$(database)-Data.publish.xml
+        testpublishfile: $(dacpacpath)\$(database)-Tests.publish.xml
         unittestinstance: localhost,1442
         agentpool: 'Azure DevOps Duet'
 
@@ -89,7 +89,7 @@ stages:
       - task: PowerShell@2
         displayName: 'Prerequisites'
         inputs:
-          filePath: '$(Build.Repository.LocalPath)/Build/azure-prerequisites.ps1'
+          filePath: '**\Build\azure-prerequisites.ps1'
 
       - task: DownloadBuildArtifacts@0
         displayName: 'Dowload Artifacts'
@@ -129,13 +129,13 @@ stages:
       - task: PowerShell@2
         displayName: 'Run Tests'
         inputs:
-          filePath: '$(Build.Repository.LocalPath)/Build/azure-validate.ps1'
+          filePath: '**\Build\azure-validate.ps1'
           arguments: '-SqlInstance "$(unittestinstance)" -SqlPassword "$(sqlsapw)" -Database UnitTesting -TestResultPath $(testresultpath) -EnableException'
 
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'JUnit'
-          testResultsFiles: '**/TEST-*.xml'
+          testResultsFiles: '**\TEST-*.xml'
           failTaskOnFailedTests: true
           testRunTitle: 'SQL Server 2019'
           
