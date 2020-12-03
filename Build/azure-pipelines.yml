@@ -88,7 +88,7 @@ stages:
       - task: PowerShell@2
         displayName: 'Prerequisites'
         inputs:
-          filePath: '\Build\azure-prerequisites.ps1'
+          filePath: '**\Build\azure-prerequisites.ps1'
 
       - task: DownloadBuildArtifacts@0
         displayName: 'Dowload Artifacts'
@@ -128,7 +128,7 @@ stages:
       - task: PowerShell@2
         displayName: 'Run Tests'
         inputs:
-          filePath: '\Build\azure-validate.ps1'
+          filePath: '**\Build\azure-validate.ps1'
           arguments: '-SqlInstance "$(unittestinstance)" -SqlPassword "$(sqlsapw)" -Database UnitTesting -TestResultPath $(testresultpath) -EnableException'
 
       - task: PublishTestResults@2
