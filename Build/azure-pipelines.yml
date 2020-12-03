@@ -406,9 +406,9 @@ stages:
       - task: SqlAzureDacpacDeployment@1
         displayName: 'Install DACPAC on Azure SQL DB'
         inputs:
-          azureSubscription: 'KCAzure'
+          azureSubscription: 'KCAzure2'
           AuthenticationType: 'server'
-          ServerName: 'kcdemosrv.database.windows.net'
+          ServerName: 'kcspeeddemosrv.database.windows.net'
           DatabaseName: '$(azuredatabase)'
           SqlUsername: '$(azureuser)'
           SqlPassword: '$(azuresqlpw)'
@@ -513,11 +513,11 @@ stages:
           downloadPath: '$(System.ArtifactsDirectory)'
 
       - task: SqlAzureDacpacDeployment@1
-        displayName: 'Install DACPAC on Azure SQL DB'
+        displayName: 'Install DACPAC on Azure SQL MI'
         inputs:
-          azureSubscription: 'KCAzure'
+          azureSubscription: 'KCAzure2'
           AuthenticationType: 'server'
-          ServerName: 'kcmidemomi.public.b2af48763bbf.database.windows.net,3342'
+          ServerName: 'kcspeeddemomi.public.617233f2f336.database.windows.net,3342'
           DatabaseName: '$(azuremidatabase)'
           SqlUsername: '$(azureuser)'
           SqlPassword: '$(azuresqlpw)'
@@ -624,9 +624,9 @@ stages:
       - task: SqlAzureDacpacDeployment@1
         displayName: 'Install DACPAC on Azure SQL DB'
         inputs:
-          azureSubscription: 'KCAzure'
+          azureSubscription: 'KCAzure2'
           AuthenticationType: 'server'
-          ServerName: 'kcsyndemows.sql.azuresynapse.net'
+          ServerName: 'kcspeeddemoasw.sql.azuresynapse.net'
           DatabaseName: '$(azuresyndatabase)'
           SqlUsername: '$(azureuser)'
           SqlPassword: '$(azuresqlpw)'
