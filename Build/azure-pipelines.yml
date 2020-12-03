@@ -29,8 +29,7 @@ stages:
     - job: 'Solution'
       variables:
         agentpool: 'Azure DevOps Duet'
-      pool:
-        vmImage: $(agentpool)
+      pool: $(agentpool)
 
       steps:
       - task: VSBuild@1
