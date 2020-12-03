@@ -438,7 +438,8 @@ stages:
           script: |
             # Write your PowerShell commands here.
             
-            ls
+            cd..
+            cd a
             cd $(mistagingarea)\$(database)-Data
            
             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
@@ -546,7 +547,8 @@ stages:
           script: |
             # Write your PowerShell commands here.
             
-            ls
+            cd..
+            cd a
             cd $(poolstagingarea)\$(database)-Data
            
             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
