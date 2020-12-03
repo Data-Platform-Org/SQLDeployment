@@ -65,7 +65,7 @@ stages:
 - stage: Test
   displayName: 'Unit Testing'
   jobs:
-    - job: 'Linux2019'
+    - job: 'UnitTesting'
       displayName: 'SQL Server 2019'
       variables:
         variables:
@@ -82,8 +82,7 @@ stages:
         unittestinstance: localhost,1442
         agentpool: 'Azure DevOps Duet'
 
-      pool:
-        vmImage: $(agentpool)
+      pool: $(agentpool)
 
       steps:
       - task: PowerShell@2
