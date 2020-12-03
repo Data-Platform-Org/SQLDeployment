@@ -79,7 +79,7 @@ stages:
         testdacpacfile: $(dacpacpath)\$(database)-Tests.dacpac
         datapublishfile: $(dacpacpath)\$(database)-Data.publish.xml
         testpublishfile: $(dacpacpath)\$(database)-Tests.publish.xml
-        unittestinstance: localhost,1442
+        unittestinstance: 'localhost,1442'
         agentpool: 'Azure DevOps Duet'
 
       pool: $(agentpool)
@@ -129,7 +129,7 @@ stages:
         displayName: 'Run Tests'
         inputs:
           filePath: 'Build\azure-validate.ps1'
-          arguments: '-SqlInstance $(unittestinstance) -SqlPassword $(sqlsapw) -Database UnitTesting -TestResultPath $(testresultpath) -EnableException'
+          arguments: '-SqlInstance "$(unittestinstance)" -SqlPassword "$(sqlsapw)" -Database "UnitTesting" -TestResultPath $(testresultpath) -EnableException'
 
       - task: PublishTestResults@2
         inputs:
