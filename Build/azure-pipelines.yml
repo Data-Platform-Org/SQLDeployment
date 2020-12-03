@@ -81,7 +81,7 @@ stages:
         testpublishfile: $(dacpacpath)/$(database)-Tests.publish.xml
 
       pool:
-        vmImage: ubuntu-20.04
+        vmImage: ubuntu-latest
 
       steps:
       - task: PowerShell@2
