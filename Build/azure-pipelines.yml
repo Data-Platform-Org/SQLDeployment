@@ -131,6 +131,11 @@ stages:
           filePath: 'Build\azure-validate.ps1'
           arguments: '-SqlInstance "$(unittestinstance)" -SqlPassword "$(sqlsapw)" -Database "UnitTesting" -TestResultPath $(testresultpath) -EnableException'
 
+      - task: PowerShell@2
+        inputs:
+          filePath: 'Build\azure-validate.ps1'
+          arguments: '-SqlInstance "$(unittestinstance)" -SqlPassword "$(sqlsapw)" -Database "UnitTesting" -TestResultPath "$(testresultpath)" -EnableException'
+
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'JUnit'
