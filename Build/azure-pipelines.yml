@@ -411,7 +411,6 @@ stages:
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
-          IpDetectionMethod: 'AutoDetect'
 
 - stage: AzureMIBuild
   dependsOn: Integration
