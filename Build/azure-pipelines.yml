@@ -410,7 +410,6 @@ stages:
           deployType: 'DacpacTask'
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
-          AdditionalArguments: '/p:IncludeCompositeObjects=true'
 
 - stage: AzureMIBuild
   dependsOn: Integration
@@ -517,7 +516,6 @@ stages:
           deployType: 'DacpacTask'
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
-          AdditionalArguments: '/p:IncludeCompositeObjects=true'
 
 
 - stage: AzurePoolBuild
@@ -626,6 +624,6 @@ stages:
           deployType: 'DacpacTask'
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
-          AdditionalArguments: '/p:IncludeCompositeObjects=true'
+
  
 
