@@ -628,6 +628,4 @@ stages:
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
-          IpDetectionMethod: 'IPAddressRange'
-          StartIpAddress: '$(fwip)'
-          EndIpAddress: '$(fwip)'
+          IpDetectionMethod: 'AutoDetect'
