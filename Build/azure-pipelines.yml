@@ -410,8 +410,8 @@ stages:
           deployType: 'DacpacTask'
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
+          AdditionalArguments: '/p:IncludeCompositeObjects=true'
           IpDetectionMethod: 'AutoDetect'
-
 
 - stage: AzureMIBuild
   dependsOn: Integration
@@ -519,7 +519,7 @@ stages:
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
-          IpDetectionMethod: 'AutoDetect'
+
 
 - stage: AzurePoolBuild
   dependsOn: Integration
@@ -627,5 +627,6 @@ stages:
           deployType: 'DacpacTask'
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
-          IpDetectionMethod: 'AutoDetect'
+          AdditionalArguments: '/p:IncludeCompositeObjects=true'
+ 
 
