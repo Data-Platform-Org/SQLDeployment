@@ -196,7 +196,10 @@ stages:
         datapublishfile: $(dacpacpath)/$(database)-Data.publish.xml
 
 
-      pool: $(agentpool)
+      pool: 
+        name: $(agentpool)
+        demands:
+          - Docker.Host
         
       steps:
       - task: DownloadBuildArtifacts@0
@@ -234,7 +237,10 @@ stages:
         datapublishfile: $(dacpacpath)/$(database)-Data.publish.xml
 
 
-      pool: $(agentpool)
+      pool: 
+        name: $(agentpool)
+        demands:
+          - Docker.Host
         
       steps:
       - task: DownloadBuildArtifacts@0
