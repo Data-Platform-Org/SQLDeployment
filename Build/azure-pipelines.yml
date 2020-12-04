@@ -27,9 +27,9 @@ stages:
 
   jobs:
     - job: 'Solution'
-
-      pool:
-        vmImage: windows-2019
+      variables:
+        agentpool: 'Azure DevOps Duet'
+      pool: $(agentpool)
 
       steps:
       - task: VSBuild@1
@@ -127,11 +127,6 @@ stages:
 
       - task: PowerShell@2
         displayName: 'Run Tests'
-        inputs:
-          filePath: 'Build\azure-validate.ps1'
-          arguments: '-SqlInstance "$(unittestinstance)" -SqlPassword "$(sqlsapw)" -Database "UnitTesting" -TestResultPath $(testresultpath) -EnableException'
-
-      - task: PowerShell@2
         inputs:
           filePath: 'Build\azure-validate.ps1'
           arguments: '-SqlInstance "$(unittestinstance)" -SqlPassword "$(sqlsapw)" -Database "UnitTesting" -TestResultPath "$(testresultpath)" -EnableException'
@@ -311,8 +306,7 @@ stages:
         datadacpacfile: $(azuredatabase).dacpac
         datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
 
-      pool:
-        vmImage: vs2017-win2016
+      pool: $(agentpool)
         
       steps:
 
@@ -421,8 +415,7 @@ stages:
         datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
 
       # You need latest hosted windows image for this
-      pool:
-        vmImage: windows-2019
+      pool: $(agentpool)
         
       steps:
 
@@ -445,8 +438,9 @@ stages:
           script: |
             # Write your PowerShell commands here.
             
-            ls
-            cd $(mistagingarea)\$(database)-Data
+            cd..
+            cd a
+            cd mistaging\$(database)-Data
            
             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
             $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider'
@@ -486,8 +480,7 @@ stages:
         datapublishfile: $(dacpacpath)/staging/AzureSQLMI.publish.xml
 
       # You need latest hosted windows image for this
-      pool:
-        vmImage: windows-2019
+      pool: $(agentpool)
         
       steps:
       - task: DownloadBuildArtifacts@0
@@ -531,8 +524,7 @@ stages:
         datapublishfile: $(dacpacpath)/$(azuredatabase).publish.xml
 
       # You need latest hosted windows image for this
-      pool:
-        vmImage: windows-2019
+      pool: $(agentpool)
         
       steps:
 
@@ -555,8 +547,9 @@ stages:
           script: |
             # Write your PowerShell commands here.
             
-            ls
-            cd $(poolstagingarea)\$(database)-Data
+            cd..
+            cd a
+            cd poolstaging\$(database)-Data
            
             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
             $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlDwDatabaseSchemaProvider'
