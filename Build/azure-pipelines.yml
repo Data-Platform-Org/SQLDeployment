@@ -410,6 +410,8 @@ stages:
           deployType: 'DacpacTask'
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
+          IpDetectionMethod: 'AutoDetect'
+
 
 - stage: AzureMIBuild
   dependsOn: Integration
@@ -625,5 +627,5 @@ stages:
           deployType: 'DacpacTask'
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
-
+          IpDetectionMethod: 'AutoDetect'
 
