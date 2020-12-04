@@ -29,7 +29,10 @@ stages:
     - job: 'Solution'
       variables:
         agentpool: 'Azure DevOps Duet'
-      pool: $(agentpool)
+      pool: 
+        name: $(agentpool)
+        demands:
+          - Docker.Host
 
       steps:
       - task: VSBuild@1
@@ -82,7 +85,10 @@ stages:
         unittestinstance: 'localhost,1442'
         agentpool: 'Azure DevOps Duet'
 
-      pool: $(agentpool)
+      pool: 
+        name: $(agentpool)
+        demands:
+          - Docker.Host
 
       steps:
       - task: PowerShell@2
@@ -152,7 +158,10 @@ stages:
         datapublishfile: $(dacpacpath)/$(database)-Data.publish.xml
 
 
-      pool: $(agentpool)
+      pool: 
+        name: $(agentpool)
+        demands:
+          - Docker.Host
         
       steps:
       - task: DownloadBuildArtifacts@0
@@ -190,7 +199,10 @@ stages:
         datapublishfile: $(dacpacpath)/$(database)-Data.publish.xml
 
 
-      pool: $(agentpool)
+      pool: 
+        name: $(agentpool)
+        demands:
+          - Docker.Host
         
       steps:
       - task: DownloadBuildArtifacts@0
@@ -228,7 +240,10 @@ stages:
         datapublishfile: $(dacpacpath)/$(database)-Data.publish.xml
 
 
-      pool: $(agentpool)
+      pool: 
+        name: $(agentpool)
+        demands:
+          - Docker.Host
         
       steps:
       - task: DownloadBuildArtifacts@0
