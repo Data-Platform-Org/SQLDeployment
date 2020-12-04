@@ -628,5 +628,5 @@ stages:
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
-          IpDetectionMethod: 'AutoDetect'
-
+          IpDetectionMethod: 'IPAddressRange'
+          StartIpAddress: '77.172.94.172'
