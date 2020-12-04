@@ -82,7 +82,10 @@ stages:
         unittestinstance: 'localhost,1442'
         agentpool: 'Azure DevOps Duet'
 
-      pool: $(agentpool)
+      pool: 
+        name: $(agentpool)
+        demands:
+          - Docker.Host
 
       steps:
       - task: PowerShell@2
