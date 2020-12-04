@@ -29,7 +29,10 @@ stages:
     - job: 'Solution'
       variables:
         agentpool: 'Azure DevOps Duet'
-      pool: $(agentpool)
+      pool: 
+        name: $(agentpool)
+        demands:
+          - Docker.Host
 
       steps:
       - task: VSBuild@1
