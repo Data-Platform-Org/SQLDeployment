@@ -440,7 +440,7 @@ stages:
             
             cd..
             cd a
-            cd $(mistagingarea)\$(database)-Data
+            cd mistaging\$(database)-Data
            
             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
             $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider'
@@ -549,7 +549,7 @@ stages:
             
             cd..
             cd a
-            cd $(poolstagingarea)\$(database)-Data
+            cd poolstaging\$(database)-Data
            
             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
             $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlDwDatabaseSchemaProvider'
