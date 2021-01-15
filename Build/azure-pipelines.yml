@@ -433,7 +433,7 @@ stages:
       steps:
 
       - task: CopyFiles@2
-        displayName: "Copy files to staging area for SQL Pool"
+        displayName: "Copy files to staging area for SQL MI"
         # Copies the file to a sub folder in the artifacts directory
         inputs:
           Contents: |
@@ -509,7 +509,7 @@ stages:
         inputs:
           azureSubscription: 'KCAzure2'
           AuthenticationType: 'server'
-          ServerName: 'kcspeeddemomi.public.617233f2f336.database.windows.net,3342'
+          ServerName: 'kcspeedmidemomi.public.94bf8aa8952e.database.windows.net,3342'
           DatabaseName: '$(azuremidatabase)'
           SqlUsername: '$(azureuser)'
           SqlPassword: '$(azuresqlpw)'
@@ -617,7 +617,7 @@ stages:
         inputs:
           azureSubscription: 'KCAzure2'
           AuthenticationType: 'server'
-          ServerName: 'kcspeeddemoasw.sql.azuresynapse.net'
+          ServerName: 'kcsynapsews.sql.azuresynapse.net'
           DatabaseName: '$(azuresyndatabase)'
           SqlUsername: '$(azureuser)'
           SqlPassword: '$(azuresqlpw)'
