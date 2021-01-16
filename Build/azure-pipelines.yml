@@ -298,7 +298,7 @@ stages:
           targetType: 'inline'
           script: |
 
-            git remote set-url github https://$(ghcred)/kevchant/dataMinds.git
+            git remote add github https://$(ghcred)/kevchant/dataMinds.git
             
             git push -u github head:main
 
