@@ -127,6 +127,6 @@
     <Build Include="Stored Procedures\Table10_GetAll.sql"/>
     <Build Include="Stored Procedures\Table10_GetByID.sql"/>
     <Build Include="Stored Procedures\Table10_Update.sql"/>
-    <Build Include="Tables\FestiveTechCalendar.sql"/>
+    <Build Include="Tables\Humanitarian.sql"/>
   </ItemGroup>
 </Project>
