@@ -178,7 +178,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1443'
-          DatabaseName: 'dataMinds-Integration'
+          DatabaseName: 'Humanitarian-Integration'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -219,7 +219,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1444'
-          DatabaseName: 'dataMinds-Staging'
+          DatabaseName: 'Humanitarian-Staging'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -260,7 +260,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1445'
-          DatabaseName: 'dataMinds-Prod-AzureDevOps'
+          DatabaseName: 'Humanitarian-Prod-AzureDevOps'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
