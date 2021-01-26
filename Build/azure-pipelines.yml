@@ -144,7 +144,7 @@ stages:
           failTaskOnFailedTests: true
           testRunTitle: 'SQL Server 2019'
           
-- stage: IntegrationIntegration
+- stage: Integration
   displayName: 'SQL 2019 Integration'
 
   jobs:
