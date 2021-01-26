@@ -144,8 +144,8 @@ stages:
           failTaskOnFailedTests: true
           testRunTitle: 'SQL Server 2019'
           
-- stage: Integration
-  displayName: 'Integration'
+- stage: IntegrationIntegration
+  displayName: 'SQL 2019 Integration'
 
   jobs:
     - job: 'Deploy2019'
@@ -186,7 +186,7 @@ stages:
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
 
 - stage: Staging
-  displayName: 'Staging'
+  displayName: 'SQL 2019 Staging'
 
   jobs:
     - job: 'Deploy2019'
@@ -227,7 +227,7 @@ stages:
           AdditionalArguments: '/p:IncludeCompositeObjects=true'
 
 - stage: Production
-  displayName: 'Production'
+  displayName: 'SQL 2019 Production'
 
   jobs:
     - job: 'Deploy2019'
