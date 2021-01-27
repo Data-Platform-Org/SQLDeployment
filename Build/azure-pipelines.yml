@@ -668,6 +668,7 @@ stages:
             cd a
             ls
             cd $(tablesfolder)
+            ls
            
             $Old_end = ')'
             $New_end = ') WITH (DISTRIBUTION = HASH (Column1), CLUSTERED COLUMNSTORE INDEX)'
