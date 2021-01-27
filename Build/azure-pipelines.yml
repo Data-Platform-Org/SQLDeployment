@@ -17,6 +17,8 @@ variables:
   miartifactname: AzureSQLMI
   azuresyndatabase: AzureSQLPool
   sqlpoolartifactname: AzureSQLPool
+  azuresyn2database: AzureSQLPool2
+  sqlpool2artifactname: AzureSQLPool2
 
 trigger:
 - development
@@ -625,5 +627,48 @@ stages:
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
 
- 
+# Transform stage for AzurePool2
+- stage: AzurePool2Transform
+  dependsOn: Integration
+  displayName: 'Transform Tables for SQL Pool2'
+
+  jobs:
+    - job: 'BuildAzureSQLPool2'
+      displayName: 'Build Azure SQL Poo2l dacpac'
+      variables:
+        variables:
+        agentpool: 'Azure DevOps Duet'
+        sourcepath: $(database)-Data
+        poolstagingarea: $(Build.ArtifactStagingDirectory)\pool2staging
+
+      pool: $(agentpool)
+        
+      steps:
+
+      - task: CopyFiles@2
+        displayName: "Copy files to staging area for SQL Pool"
+        # Copies the file to a sub folder in the artifacts directory
+        inputs:
+          Contents: |
+            $(sourcepath)\**
+          TargetFolder: '$(poolstagingarea)'
+          FlattenFolders: false
+          OverWrite: true
+
+      - task: PowerShell@2
+        displayName: "Runs PowerShell to add Hash distribution"
+        # Adds Hash distribution to Table 1
+        inputs:
+          targetType: 'inline'
+          script: |
+            # Write your PowerShell commands here.
+            
+            cd..
+            cd a
+            cd poolstaging\$(database)-Data\Tables
+           
+            $Old_end = ');'
+            $New_end = ') WITH (DISTRIBUTION = HASH (Column1), CLUSTERED COLUMNSTORE INDEX);'
+                       
+            (Get-Content "Table1.sql") -replace $Old_end, $New_end  | Set-Content "Table1.sql" 
 
