@@ -665,7 +665,7 @@ stages:
             
             cd..
             cd a
-            cd poolstaging\$(database)-Data\Tables
+            cd $(poolstagingarea)\$(database)-Data\Tables
            
             $Old_end = ');'
             $New_end = ') WITH (DISTRIBUTION = HASH (Column1), CLUSTERED COLUMNSTORE INDEX);'
