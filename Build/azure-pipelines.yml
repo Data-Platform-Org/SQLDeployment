@@ -640,7 +640,7 @@ stages:
         agentpool: 'Azure DevOps Duet'
         sourcepath: $(database)-Data
         poolstagingarea: $(Build.ArtifactStagingDirectory)\pool2staging
-        tablesfolder: $(poolstagingarea)\Tables
+        tablesfolder: $(poolstagingarea)\$(sourcepath)\Tables
 
       pool: $(agentpool)
         
@@ -666,6 +666,7 @@ stages:
             
             cd..
             cd a
+            ls
             cd $(tablesfolder)
            
             $Old_end = ');'
