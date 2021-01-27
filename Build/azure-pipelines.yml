@@ -697,14 +697,6 @@ stages:
             
             (Get-Content "AzureSQLPool2.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureSQLPool2.sqlproj"
 
-#Build dacpac for AzurePool2
-    - job: 'BuildAzureSQLPool2'
-      displayName: 'Build dacpac for AzurePool2'
-      variables:
-        variables:
-       
-      steps:
-
       - task: VSBuild@1
         displayName: 'Build Azure-Data project'
         # Builds the specific project using the renamed .sqlproj file
