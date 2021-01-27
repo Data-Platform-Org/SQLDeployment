@@ -670,8 +670,8 @@ stages:
             cd $(tablesfolder)
             ls
            
-            $Old_end = ')'
-            $New_end = ') WITH (DISTRIBUTION = HASH (Column1), CLUSTERED COLUMNSTORE INDEX)'
+            $Old_end = '\)'
+            $New_end = '\) WITH \(DISTRIBUTION = HASH \(Column1\), CLUSTERED COLUMNSTORE INDEX\)'
                        
             (Get-Content "Table1.sql") -replace $Old_end, $New_end  | Set-Content "Table1.sql" 
 
