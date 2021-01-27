@@ -602,7 +602,6 @@ stages:
         datadacpacfile: $(dacpacpath)/AzureSQLPool.dacpac
         datapublishfile: $(dacpacpath)/staging/AzureSQLPool.publish.xml
 
-
       pool: $(agentpool)
         
       steps:
@@ -628,22 +627,24 @@ stages:
           DacpacFile: '$(datadacpacfile)'
 
 # Transform stage for AzurePool2
-- stage: AzurePool2Transform
+- stage: TransformandBuild
   dependsOn: Integration
-  displayName: 'Transform Tables for SQL Pool2'
+  displayName: 'Transform & Build'
+  variables:
+    variables:
+    agentpool: 'Azure DevOps Duet'
+    poolstagingarea: $(Build.ArtifactStagingDirectory)\pool2staging
+    sourcepath: $(database)-Data
+
+  pool: $(agentpool)
 
   jobs:
-    - job: 'BuildAzureSQLPool2'
-      displayName: 'Build Azure SQL Poo2l dacpac'
+    - job: 'TransformAzureSQLPool2'
+      displayName: 'Transform Tables for AzurePool2'
       variables:
         variables:
-        agentpool: 'Azure DevOps Duet'
-        sourcepath: $(database)-Data
-        poolstagingarea: $(Build.ArtifactStagingDirectory)\pool2staging
         tablesfolder: pool2staging\$(sourcepath)\Tables
 
-      pool: $(agentpool)
-        
       steps:
 
       - task: CopyFiles@2
@@ -675,3 +676,46 @@ stages:
                        
             (Get-Content "Table1.sql") -replace $Old_end, $New_end  | Set-Content "Table1.sql" 
 
+      - task: PowerShell@2
+        displayName: "Runs PowerShell to replace DSP"
+        # Renames the .sqlproj file
+        # Followed by the PowerShell to replace the Database Schema Provider
+        inputs:
+          targetType: 'inline'
+          script: |
+            # Write your PowerShell commands here.
+            
+            cd..
+            cd a
+            cd pool2staging\$(database)-Data
+           
+            $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
+            $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlDwDatabaseSchemaProvider'
+            
+            rename-item UnitTesting-Data.sqlproj AzureSQLPool2.sqlproj
+            rename-item UnitTesting-Data.publish.xml AzureSQLPool2.publish.xml
+            
+            (Get-Content "AzureSQLPool2.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureSQLPool2.sqlproj"
+
+#Build dacpac for AzurePool2
+    - job: 'BuildAzureSQLPool2'
+      displayName: 'Build dacpac for AzurePool2'
+      variables:
+        variables:
+       
+      steps:
+
+      - task: VSBuild@1
+        displayName: 'Build Azure-Data project'
+        # Builds the specific project using the renamed .sqlproj file
+        inputs:
+          solution: $(poolstagingarea)/$(database)-Data/AzureSQLPool2.sqlproj
+          configuration: $(configuration)
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Azure SQL database artifact'
+        # Publishes the dacpac as part of an artifact within Azure DevOps
+        inputs:
+          PathtoPublish: '$(poolstagingarea)\$(database)-Data\bin\$(configuration)'
+          ArtifactName: $(sqlpool2artifactname)
+          publishLocation: 'Container'
