@@ -667,7 +667,7 @@ stages:
             cd..
             cd a
             ls
-            cd $(tablesfolder)
+            cd $(poolstagingarea)\$(sourcepath)\Tables
             ls
            
             $Old_end = ')'
