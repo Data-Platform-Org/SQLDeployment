@@ -126,7 +126,7 @@ stages:
           downloadPath: '$(System.ArtifactsDirectory)'
 
       - task: SqlAzureDacpacDeployment@1
-        displayName: 'Install DACPAC on Azure SQL DB'
+        displayName: 'Install DACPAC on AzureSQLPool2'
         inputs:
           azureSubscription: 'KCAzure2'
           AuthenticationType: 'server'
