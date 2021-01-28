@@ -9,8 +9,8 @@ variables:
   database: UnitTesting
   azuredatabase: Azure-Data
   artifactname: Database
-  azuresyn2database: AzureSQLPool2
-  sqlpool2artifactname: AzureSQLPool2
+  azuresyndatabase: AzureSQLPool
+  sqlpoolartifactname: AzureSQLPool
 
 stages:
 
@@ -20,17 +20,17 @@ stages:
   variables:
     variables:
     agentpool: 'Azure DevOps Duet'
-    poolstagingarea: $(Build.ArtifactStagingDirectory)\pool2staging
+    poolstagingarea: $(Build.ArtifactStagingDirectory)\poolstaging2
     sourcepath: $(database)-Data
 
   pool: $(agentpool)
 
   jobs:
     - job: 'TransformAzureSQLPool2'
-      displayName: 'Transform Tables for AzurePool2'
+      displayName: 'Transform Tables for AzurePool'
       variables:
         variables:
-        tablesfolder: pool2staging\$(sourcepath)\Tables
+        tablesfolder: poolstaging2\$(sourcepath)\Tables
 
       steps:
 
@@ -75,21 +75,21 @@ stages:
             
             cd..
             cd a
-            cd pool2staging\$(database)-Data
+            cd poolstaging2\$(database)-Data
            
             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
             $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlDwDatabaseSchemaProvider'
             
-            rename-item UnitTesting-Data.sqlproj AzureSQLPool2.sqlproj
-            rename-item UnitTesting-Data.publish.xml AzureSQLPool2.publish.xml
+            rename-item UnitTesting-Data.sqlproj AzureSQLPool.sqlproj
+            rename-item UnitTesting-Data.publish.xml AzureSQLPool.publish.xml
             
-            (Get-Content "AzureSQLPool2.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureSQLPool2.sqlproj"
+            (Get-Content "AzureSQLPool.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureSQLPool.sqlproj"
 
       - task: VSBuild@1
         displayName: 'Build Azure-Data project'
         # Builds the specific project using the renamed .sqlproj file
         inputs:
-          solution: $(poolstagingarea)/$(database)-Data/AzureSQLPool2.sqlproj
+          solution: $(poolstagingarea)/$(database)-Data/AzureSQLPool.sqlproj
           configuration: $(configuration)
 
       - task: PublishBuildArtifacts@1
@@ -97,7 +97,7 @@ stages:
         # Publishes the dacpac as part of an artifact within Azure DevOps
         inputs:
           PathtoPublish: '$(poolstagingarea)\$(database)-Data\bin\$(configuration)'
-          ArtifactName: $(sqlpool2artifactname)
+          ArtifactName: $(sqlpoolartifactname)
           publishLocation: 'Container'
 
 
@@ -107,12 +107,12 @@ stages:
 
   jobs:
     - job: 'Deploy2019'
-      displayName: 'Deploy AzureSQLPool2'
+      displayName: 'Deploy AzureSQLPool'
       variables:
         variables:
         agentpool: 'Azure DevOps Duet'
-        dacpacpath: $(System.ArtifactsDirectory)/$(sqlpool2artifactname)
-        datadacpacfile: $(dacpacpath)/AzureSQLPool2.dacpac
+        dacpacpath: $(System.ArtifactsDirectory)/$(sqlpoolartifactname)
+        datadacpacfile: $(dacpacpath)/AzureSQLPool.dacpac
 
       pool: $(agentpool)
         
@@ -122,7 +122,7 @@ stages:
         inputs:
           buildType: 'current'
           downloadType: 'specific'
-          artifactName:  '$(sqlpool2artifactname)'
+          artifactName:  '$(sqlpoolartifactname)'
           downloadPath: '$(System.ArtifactsDirectory)'
 
       - task: SqlAzureDacpacDeployment@1
@@ -131,7 +131,7 @@ stages:
           azureSubscription: 'KCAzure2'
           AuthenticationType: 'server'
           ServerName: 'kcsynapsews.sql.azuresynapse.net'
-          DatabaseName: '$(azuresyn2database)'
+          DatabaseName: '$(azuresyndatabase)'
           SqlUsername: 'sqladminuser'
           SqlPassword: '$(sqlsapw)'
           deployType: 'DacpacTask'
