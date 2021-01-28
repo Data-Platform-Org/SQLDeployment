@@ -6,13 +6,9 @@
 
 variables:
   configuration: release
-  sqlinstance: localhost
   database: UnitTesting
   azuredatabase: Azure-Data
   artifactname: Database
-  azureartifactname: AzureSQLDB
-  azuremidatabase: AzureSQLMI
-  miartifactname: AzureSQLMI
   azuresyn2database: AzureSQLPool2
   sqlpool2artifactname: AzureSQLPool2
 
@@ -20,7 +16,6 @@ stages:
 
 # Transform stage for AzurePool2
 - stage: TransformandBuild
-  dependsOn: Integration
   displayName: 'Transform & Build'
   variables:
     variables:
