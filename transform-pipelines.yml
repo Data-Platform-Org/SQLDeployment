@@ -99,3 +99,41 @@ stages:
           PathtoPublish: '$(poolstagingarea)\$(database)-Data\bin\$(configuration)'
           ArtifactName: $(sqlpool2artifactname)
           publishLocation: 'Container'
+
+
+- stage: DeployAzurePool
+  dependsOn: TransformandBuild
+  displayName: 'AzureSQLPool2 Deploy'
+
+  jobs:
+    - job: 'Deploy2019'
+      displayName: 'Deploy AzureSQLPool2'
+      variables:
+        variables:
+        agentpool: 'Azure DevOps Duet'
+        dacpacpath: $(System.ArtifactsDirectory)/$(sqlpool2artifactname)
+        datadacpacfile: $(dacpacpath)/AzureSQLPool2.dacpac
+
+      pool: $(agentpool)
+        
+      steps:
+      - task: DownloadBuildArtifacts@0
+        displayName: 'Dowload Artifacts'
+        inputs:
+          buildType: 'current'
+          downloadType: 'specific'
+          artifactName:  '$(sqlpool2artifactname)'
+          downloadPath: '$(System.ArtifactsDirectory)'
+
+      - task: SqlAzureDacpacDeployment@1
+        displayName: 'Install DACPAC on Azure SQL DB'
+        inputs:
+          azureSubscription: 'KCAzure2'
+          AuthenticationType: 'server'
+          ServerName: 'kcsynapsews.sql.azuresynapse.net'
+          DatabaseName: '$(azuresyn2database)'
+          SqlUsername: 'sqladminuser'
+          SqlPassword: '$(sqlsapw)'
+          deployType: 'DacpacTask'
+          DeploymentAction: 'Publish'
+          DacpacFile: '$(datadacpacfile)'
