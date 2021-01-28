@@ -20,8 +20,12 @@ variables:
 
 
 trigger:
-- development
-- main
+  branches:
+    include:
+    - main
+  paths: 
+    exclude:
+    - transform-pipelines.yml   
 
 stages:
 - stage: Build
