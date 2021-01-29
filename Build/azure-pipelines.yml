@@ -629,3 +629,11 @@ stages:
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
 
+
+- task: SqlAzureDacpacDeployment@1
+  inputs:
+    azureSubscription: 'Visual Studio Enterprise Subscription(a9da8d2f-e4d9-4755-a6af-20be941152c5)'
+    AuthenticationType: 'server'
+    deployType: 'DacpacTask'
+    DeploymentAction: 'Publish'
+    IpDetectionMethod: 'AutoDetect'
