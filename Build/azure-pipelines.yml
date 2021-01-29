@@ -302,9 +302,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-
-            git remote add github https://$(ghcred)/kevchant/DataToboggan.git
-            
+          
             git push -u github head:main
 
 
