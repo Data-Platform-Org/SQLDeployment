@@ -128,7 +128,7 @@ stages:
       - task: SqlAzureDacpacDeployment@1
         displayName: 'Install DACPAC on AzureSQLPool2'
         inputs:
-          azureSubscription: '#(vsentsubscriptionb)'
+          azureSubscription: '$(vsentsubscriptionb)'
           AuthenticationType: 'server'
           ServerName: 'dtsynapsews.sql.azuresynapse.net'
           DatabaseName: '$(azuresyndatabase)'
