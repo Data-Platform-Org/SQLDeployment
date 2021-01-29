@@ -406,7 +406,7 @@ stages:
       - task: SqlAzureDacpacDeployment@1
         displayName: 'Install DACPAC on Azure SQL DB'
         inputs:
-          azureSubscription: 'KCAzure2'
+          azureSubscription: '$(vsentsubscriptionb)'
           AuthenticationType: 'server'
           ServerName: 'dtdemosrv.database.windows.net'
           DatabaseName: '$(azuredatabase)'
@@ -512,7 +512,7 @@ stages:
 #       - task: SqlAzureDacpacDeployment@1
 #         displayName: 'Install DACPAC on Azure SQL MI'
 #         inputs:
-#           azureSubscription: 'KCAzure2'
+#           azureSubscription: '$(vsentsubscriptionb)'
 #           AuthenticationType: 'server'
 #           ServerName: 'kcspeedmidemomi.public.94bf8aa8952e.database.windows.net,3342'
 #           DatabaseName: '$(azuremidatabase)'
