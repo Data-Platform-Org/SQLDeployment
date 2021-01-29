@@ -6,7 +6,7 @@
 trigger:
   branches:
     exclude:
-      main
+      - main
 
 variables:
   configuration: release
