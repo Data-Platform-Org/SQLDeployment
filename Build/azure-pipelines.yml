@@ -183,7 +183,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1443'
-          DatabaseName: 'Humanitarian-Integration'
+          DatabaseName: 'Integration'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -224,7 +224,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1444'
-          DatabaseName: 'Humanitarian-Staging'
+          DatabaseName: 'Staging'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -265,7 +265,7 @@ stages:
           DacpacFile: '$(dacpacpath)/$(datadacpacfile)'
           TargetMethod: 'server'
           ServerName: 'localhost,1445'
-          DatabaseName: 'Humanitarian-Prod-AzureDevOps'
+          DatabaseName: 'Prod-AzureDevOps'
           AuthScheme: 'sqlServerAuthentication'
           SqlUsername: 'sa'
           SqlPassword: $(sqlsapw)
@@ -302,9 +302,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-
-            git remote add github https://$(ghcred)/kevchant/DataToboggan.git
-            
+          
             git push -u github head:main
 
 
@@ -406,9 +404,9 @@ stages:
       - task: SqlAzureDacpacDeployment@1
         displayName: 'Install DACPAC on Azure SQL DB'
         inputs:
-          azureSubscription: 'KCAzure2'
+          azureSubscription: '$(vsentsubscriptionb)'
           AuthenticationType: 'server'
-          ServerName: 'kcdemosrv.database.windows.net'
+          ServerName: 'dtdemosrv.database.windows.net'
           DatabaseName: '$(azuredatabase)'
           SqlUsername: '$(azureuser)'
           SqlPassword: '$(azuresqlpw)'
@@ -512,7 +510,7 @@ stages:
 #       - task: SqlAzureDacpacDeployment@1
 #         displayName: 'Install DACPAC on Azure SQL MI'
 #         inputs:
-#           azureSubscription: 'KCAzure2'
+#           azureSubscription: '$(vsentsubscriptionb)'
 #           AuthenticationType: 'server'
 #           ServerName: 'kcspeedmidemomi.public.94bf8aa8952e.database.windows.net,3342'
 #           DatabaseName: '$(azuremidatabase)'
@@ -619,12 +617,13 @@ stages:
       - task: SqlAzureDacpacDeployment@1
         displayName: 'Install DACPAC on Azure SQL DB'
         inputs:
-          azureSubscription: 'KCAzure2'
+          azureSubscription: '$(vsentsubscriptionb)'
           AuthenticationType: 'server'
-          ServerName: 'kcsynapsews.sql.azuresynapse.net'
+          ServerName: 'dtsynapsews.sql.azuresynapse.net'
           DatabaseName: '$(azuresyndatabase)'
           SqlUsername: 'sqladminuser'
           SqlPassword: '$(sqlsapw)'
           deployType: 'DacpacTask'
           DeploymentAction: 'Publish'
           DacpacFile: '$(datadacpacfile)'
+

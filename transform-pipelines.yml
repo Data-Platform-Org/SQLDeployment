@@ -128,9 +128,9 @@ stages:
       - task: SqlAzureDacpacDeployment@1
         displayName: 'Install DACPAC on AzureSQLPool2'
         inputs:
-          azureSubscription: 'KCAzure2'
+          azureSubscription: '$(vsentsubscriptionb)'
           AuthenticationType: 'server'
-          ServerName: 'kcsynapsews.sql.azuresynapse.net'
+          ServerName: 'dtsynapsews.sql.azuresynapse.net'
           DatabaseName: '$(azuresyndatabase)'
           SqlUsername: 'sqladminuser'
           SqlPassword: '$(sqlsapw)'
