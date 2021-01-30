@@ -306,7 +306,6 @@ stages:
             git push -u github head:main
 
 
-# Uses 'The Kevin Method'
 - stage: AzureBuild
   dependsOn: Integration
   displayName: 'Prepare files for Azure SQL DB'
@@ -520,7 +519,7 @@ stages:
 #           DeploymentAction: 'Publish'
 #           DacpacFile: '$(datadacpacfile)'
 
-
+# Uses 'The Kevin Method'
 - stage: AzurePoolBuild
   dependsOn: Integration
   displayName: 'Prepare files for SQL Pool'
