@@ -243,7 +243,7 @@ jobs:
         uses: Azure/sql-action@v1
         with:
           # Name of the SQL Server name
-          server-name: 'sqldeploysrv.database.windows.net'
+          server-name: 'kcdemosrv.database.windows.net'
           # The connection string, including authentication information, for the SQL Server database.
           connection-string: '${{ secrets.AZURESQLDB_CONNECTION_STRING }}'
           # Path to DACPAC file. *.dacpac or a folder to deploy
@@ -308,7 +308,7 @@ jobs:
         uses: Azure/sql-action@v1
         with:
           # Name of the SQL Server name
-          server-name: 'sqldeployws.sql.azuresynapse.net'
+          server-name: 'kcsynapsews.sql.azuresynapse.net'
           # The connection string, including authentication information, for the SQL Server database.
           connection-string: '${{ secrets.AZURESQLPOOL_CONNECTION_STRING }}'
           # Path to DACPAC file. *.dacpac or a folder to deploy
