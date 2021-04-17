@@ -1,5 +1,5 @@
 CREATE TABLE [dbo].[DataToboggan]
 (
   [Id] INT NULL,
-  [columna] char(2)
+  [columnc] char(2)
 )
