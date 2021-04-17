@@ -127,6 +127,6 @@
     <Build Include="Stored Procedures\Table10_GetAll.sql"/>
     <Build Include="Stored Procedures\Table10_GetByID.sql"/>
     <Build Include="Stored Procedures\Table10_Update.sql"/>
-    <Build Include="Tables\DataToboggan.sql"/>
+    <Build Include="Tables\sqldeploy.sql"/>
   </ItemGroup>
 </Project>
