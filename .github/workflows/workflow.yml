@@ -290,28 +290,28 @@ jobs:
           name: AzureSQLPool
           path: ${{ github.workspace }}/AzureSQLPoolstaging/bin/Release/ 
 
-#   # Deploy Azure SQL Pool job
-#   DeployAzureSQLPool:
-#     # Set the dependency for the build job
-#     needs: BuildAzureSQLPool
-#     # The type of runner that the job will run on
-#     runs-on: self-hosted
-#         # Steps represent a sequence of tasks that will be executed as part of the job
-#     steps:
-#       - name: download Data artifact
-#         # Dowloads Data artifact to dacpac folder
-#         uses: actions/download-artifact@v2.0.6
-#         with:
-#           name: AzureSQLPool
-#       # Installs UnitTesting-Data dacpac
-#       - name: Azure SQL Deploy
-#         uses: Azure/sql-action@v1
-#         with:
-#           # Name of the SQL Server name
-#           server-name: 'kcsynapsews.sql.azuresynapse.net'
-#           # The connection string, including authentication information, for the SQL Server database.
-#           connection-string: '${{ secrets.AZURESQLPOOL_CONNECTION_STRING }}'
-#           # Path to DACPAC file. *.dacpac or a folder to deploy
-#           dacpac-package: 'AzureSQLPool.dacpac'
-#           # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
-#           arguments: '/p:IncludeCompositeObjects=true' 
+  # Deploy Azure SQL Pool job
+  DeploySQLPool:
+    # Set the dependency for the build job
+    needs: BuildAzureSQLPool
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+        # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: download Data artifact
+        # Dowloads Data artifact to dacpac folder
+        uses: actions/download-artifact@v2.0.6
+        with:
+          name: AzureSQLPool
+      # Installs UnitTesting-Data dacpac
+      - name: Azure SQL Deploy
+        uses: Azure/sql-action@v1
+        with:
+          # Name of the SQL Server name
+          server-name: 'kcsynapsews.sql.azuresynapse.net'
+          # The connection string, including authentication information, for the SQL Server database.
+          connection-string: '${{ secrets.AZURESQLPOOL_CONNECTION_STRING }}'
+          # Path to DACPAC file. *.dacpac or a folder to deploy
+          dacpac-package: 'AzureSQLPool.dacpac'
+          # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
+          arguments: '/p:IncludeCompositeObjects=true' 
