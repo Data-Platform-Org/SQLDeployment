@@ -1,5 +1,5 @@
 CREATE TABLE [dbo].[SQLDeploy]
 (
   [Id] INT NULL,
-  [columnb] char(2)
+  [columna] char(2)
 )
