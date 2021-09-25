@@ -182,10 +182,6 @@ jobs:
         run: |
             git pull origin --unshallow
             
-            git remote add devops https://sander0822@dev.azure.com/sander0822/SQLDeploy/_git/FromGitHub
-            
-            #git push -u devops head:main
-
   # Build dacpac for Azure SQL Database
   BuildAzureSQLDB:
     # Set the dependency for the build job
