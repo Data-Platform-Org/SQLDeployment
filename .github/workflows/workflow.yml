@@ -239,9 +239,9 @@ jobs:
         uses: Azure/sql-action@v1
         with:
           # Name of the SQL Server name
-          server-name: 'kcdemosrv.database.windows.net'
+          server-name: '${{ secrets.AZURESQLDB_SERVER }}'
           # The connection string, including authentication information, for the SQL Server database.
-          connection-string: '${{ secrets.AZURESQLDB_CONNECTION_STRING }}'
+          connection-string: '${{ secrets.AZURESQLDB_FDD_CONNECTION_STRING }}'
           # Path to DACPAC file. *.dacpac or a folder to deploy
           dacpac-package: 'AzureSQLDB.dacpac'
           # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
@@ -304,9 +304,9 @@ jobs:
         uses: Azure/sql-action@v1
         with:
           # Name of the SQL Server name
-          server-name: 'kcsynapsews.sql.azuresynapse.net'
+          server-name: '${{ secrets.SYNAPSE_ENDPOINT }}'
           # The connection string, including authentication information, for the SQL Server database.
-          connection-string: '${{ secrets.AZURESQLPOOL_CONNECTION_STRING }}'
+          connection-string: '${{ secrets.SQLPOOL_CONNECTION_STRING }}'
           # Path to DACPAC file. *.dacpac or a folder to deploy
           dacpac-package: 'AzureSQLPool.dacpac'
           # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
