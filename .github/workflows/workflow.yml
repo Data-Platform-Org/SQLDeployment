@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v2
       # Find msbuild
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.0.3
       # create dacpac using MSBUILD
       - name: Build Unitesting-Data project
         run: |
@@ -30,12 +30,12 @@ jobs:
           cd UnitTesting-Tests
           msbuild.exe UnitTesting-Tests.sqlproj /p:Configuration=Release
       # Publish Unitesting-Data artifact
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v2.2.4
         with:
           name: Data
           path: ${{ github.workspace }}/UnitTesting-Data/bin/Release/   
       # Publish Unitesting-Tests artifact
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v2.2.4
         with:
           name: Tests
           path: ${{ github.workspace }}/UnitTesting-Tests/bin/Release/
@@ -50,12 +50,12 @@ jobs:
     steps:
       - name: download Data artifact
         # Dowloads Data artifact to dacpac folder
-        uses: actions/download-artifact@v2.0.6
+        uses: actions/download-artifact@v2.0.10
         with:
           name: Data
       - name: download Data artifact
         # Dowloads Data artifact to dacpac folder
-        uses: actions/download-artifact@v2.0.6
+        uses: actions/download-artifact@v2.0.10
         with:
           name: Tests
       # Installs UnitTesting-Data dacpac
@@ -123,7 +123,7 @@ jobs:
     steps:
       - name: download Data artifact
         # Dowloads Data artifact to dacpac folder
-        uses: actions/download-artifact@v2.0.6
+        uses: actions/download-artifact@v2.0.10
         with:
           name: Data
       # Installs UnitTesting-Data dacpac
@@ -151,7 +151,7 @@ jobs:
     steps:
       - name: download Data artifact
         # Dowloads Data artifact to dacpac folder
-        uses: actions/download-artifact@v2.0.6
+        uses: actions/download-artifact@v2.0.10
         with:
           name: Data
       # Installs UnitTesting-Data dacpac
@@ -194,7 +194,7 @@ jobs:
       - uses: actions/checkout@v2
       # Find msbuild
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.0.3
       # Sync Git repository
       - name: Copy files and replace DSP
         run: |
@@ -216,7 +216,7 @@ jobs:
           msbuild.exe AzureSQLDB.sqlproj /p:Configuration=Release  
 
       # Publish Unitesting-Data artifact
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v2.2.4
         with:
           name: AzureSQLDB
           path: ${{ github.workspace }}/AzureSQLDBstaging/bin/Release/ 
@@ -231,7 +231,7 @@ jobs:
     steps:
       - name: download Data artifact
         # Dowloads Data artifact to dacpac folder
-        uses: actions/download-artifact@v2.0.6
+        uses: actions/download-artifact@v2.0.10
         with:
           name: AzureSQLDB
       # Installs UnitTesting-Data dacpac
@@ -259,7 +259,7 @@ jobs:
       - uses: actions/checkout@v2
       # Find msbuild
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.0.3
       # Sync Git repository
       - name: Copy files and replace DSP
         run: |
@@ -281,7 +281,7 @@ jobs:
           msbuild.exe AzureSQLPool.sqlproj /p:Configuration=Release  
 
       # Publish Unitesting-Data artifact
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v2.2.4
         with:
           name: AzureSQLPool
           path: ${{ github.workspace }}/AzureSQLPoolstaging/bin/Release/ 
@@ -296,7 +296,7 @@ jobs:
     steps:
       - name: download Data artifact
         # Dowloads Data artifact to dacpac folder
-        uses: actions/download-artifact@v2.0.6
+        uses: actions/download-artifact@v2.0.10
         with:
           name: AzureSQLPool
       # Installs UnitTesting-Data dacpac
