@@ -10,7 +10,7 @@ jobs:
   # build job
   build:
     # The type of runner that the job will run on
-    runs-on: [self-hosted,dpo]
+    runs-on: self-hosted
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -45,7 +45,7 @@ jobs:
     # Set the dependency for the build job
     needs: build
     # The type of runner that the job will run on
-    runs-on: [self-hosted,dpo]
+    runs-on: self-hosted
         # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: download Data artifact
@@ -92,7 +92,7 @@ jobs:
     # Set the dependency for the build job
     needs: UnitTesting
     # The type of runner that the job will run on
-    runs-on: [self-hosted,dpo]
+    runs-on: self-hosted
         # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: download Data artifact
@@ -118,7 +118,7 @@ jobs:
     # Set the dependency for the build job
     needs: _Integration
     # The type of runner that the job will run on
-    runs-on: [self-hosted,dpo]
+    runs-on: self-hosted
         # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: download Data artifact
@@ -144,7 +144,7 @@ jobs:
     # Set the dependency for the build job
     needs: _Staging
     # The type of runner that the job will run on
-    runs-on: [self-hosted,dpo]
+    runs-on: self-hosted
     environment:
       name: Production
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -172,7 +172,7 @@ jobs:
     # Set the dependency for the build job
     needs: UnitTesting
     # The type of runner that the job will run on
-    runs-on: [self-hosted,dpo]
+    runs-on: self-hosted
         # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -187,7 +187,7 @@ jobs:
     # Set the dependency for the build job
     needs: _Integration
     # The type of runner that the job will run on
-    runs-on: [self-hosted,dpo]
+    runs-on: self-hosted
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -226,7 +226,7 @@ jobs:
     # Set the dependency for the build job
     needs: BuildAzureSQLDB
     # The type of runner that the job will run on
-    runs-on: [self-hosted,dpo]
+    runs-on: self-hosted
         # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: download Data artifact
@@ -252,7 +252,7 @@ jobs:
     # Set the dependency for the build job
     needs: _Integration
     # The type of runner that the job will run on
-    runs-on: [self-hosted,dpo]
+    runs-on: self-hosted
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -291,7 +291,7 @@ jobs:
     # Set the dependency for the build job
     needs: BuildAzureSQLPool
     # The type of runner that the job will run on
-    runs-on: [self-hosted,dpo]
+    runs-on: self-hosted
         # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: download Data artifact
