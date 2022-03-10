@@ -88,7 +88,7 @@ jobs:
           cd build
           .\azure-validate.ps1 -SqlInstance "localhost,1442" -SqlPassword "${{ secrets.SQLSAPW }}" -Database "UnitTesting" -TestResultPath "${{ github.workspace }}" -EnableException
   # UnitTesting job
-  _Integration:
+  Integration:
     # Set the dependency for the build job
     needs: UnitTesting
     # The type of runner that the job will run on
@@ -114,7 +114,7 @@ jobs:
           arguments: '/p:IncludeCompositeObjects=true'   
 
   # Staging job
-  _Staging:
+  Staging:
     # Set the dependency for the build job
     needs: _Integration
     # The type of runner that the job will run on
@@ -140,7 +140,7 @@ jobs:
           arguments: '/p:IncludeCompositeObjects=true' 
 
   # Production job
-  _Production:
+  Production:
     # Set the dependency for the build job
     needs: _Staging
     # The type of runner that the job will run on
