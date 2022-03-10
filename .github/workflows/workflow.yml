@@ -167,147 +167,147 @@ jobs:
           # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
           arguments: '/p:IncludeCompositeObjects=true' 
 
-  # Sync to Azure DevOps repo
-  Sync_AzureDevOps:
-    # Set the dependency for the build job
-    needs: UnitTesting
-    # The type of runner that the job will run on
-    runs-on: self-hosted
-        # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      # Sync Git repository
-      - name: Sync Azure DevOps repository
-        run: |
-            git pull origin --unshallow
+#   # Sync to Azure DevOps repo
+#   Sync_AzureDevOps:
+#     # Set the dependency for the build job
+#     needs: UnitTesting
+#     # The type of runner that the job will run on
+#     runs-on: self-hosted
+#         # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - uses: actions/checkout@v2
+#       # Sync Git repository
+#       - name: Sync Azure DevOps repository
+#         run: |
+#             git pull origin --unshallow
             
-  # Build dacpac for Azure SQL Database
-  BuildAzureSQLDB:
-    # Set the dependency for the build job
-    needs: _Integration
-    # The type of runner that the job will run on
-    runs-on: self-hosted
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      # Find msbuild
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.3
-      # Sync Git repository
-      - name: Copy files and replace DSP
-        run: |
-            # copy files
-            md AzureSQLDBstaging
-            Copy-Item -Path UnitTesting-Data\* -Destination AzureSQLDBstaging -Recurse
-            # replace DSP
-            cd AzureSQLDBstaging
-            $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
-            $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider'
-            rename-item UnitTesting-Data.sqlproj AzureSQLDB.sqlproj
-            rename-item UnitTesting-Data.publish.xml AzureSQLDB.publish.xml
-            (Get-Content "AzureSQLDB.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureSQLDB.sqlproj"
+#   # Build dacpac for Azure SQL Database
+#   BuildAzureSQLDB:
+#     # Set the dependency for the build job
+#     needs: _Integration
+#     # The type of runner that the job will run on
+#     runs-on: self-hosted
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - uses: actions/checkout@v2
+#       # Find msbuild
+#       - name: Add msbuild to PATH
+#         uses: microsoft/setup-msbuild@v1.0.3
+#       # Sync Git repository
+#       - name: Copy files and replace DSP
+#         run: |
+#             # copy files
+#             md AzureSQLDBstaging
+#             Copy-Item -Path UnitTesting-Data\* -Destination AzureSQLDBstaging -Recurse
+#             # replace DSP
+#             cd AzureSQLDBstaging
+#             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
+#             $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider'
+#             rename-item UnitTesting-Data.sqlproj AzureSQLDB.sqlproj
+#             rename-item UnitTesting-Data.publish.xml AzureSQLDB.publish.xml
+#             (Get-Content "AzureSQLDB.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureSQLDB.sqlproj"
  
-      # create dacpac using MSBUILD
-      - name: Build Unitesting-Data project
-        run: |
-          cd AzureSQLDBstaging
-          msbuild.exe AzureSQLDB.sqlproj /p:Configuration=Release  
+#       # create dacpac using MSBUILD
+#       - name: Build Unitesting-Data project
+#         run: |
+#           cd AzureSQLDBstaging
+#           msbuild.exe AzureSQLDB.sqlproj /p:Configuration=Release  
 
-      # Publish Unitesting-Data artifact
-      - uses: actions/upload-artifact@v2.2.4
-        with:
-          name: AzureSQLDB
-          path: ${{ github.workspace }}/AzureSQLDBstaging/bin/Release/ 
+#       # Publish Unitesting-Data artifact
+#       - uses: actions/upload-artifact@v2.2.4
+#         with:
+#           name: AzureSQLDB
+#           path: ${{ github.workspace }}/AzureSQLDBstaging/bin/Release/ 
 
-  # Production job
-  DeployAzureSQLDB:
-    # Set the dependency for the build job
-    needs: BuildAzureSQLDB
-    # The type of runner that the job will run on
-    runs-on: self-hosted
-        # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      - name: download Data artifact
-        # Dowloads Data artifact to dacpac folder
-        uses: actions/download-artifact@v2.0.10
-        with:
-          name: AzureSQLDB
-      # Installs UnitTesting-Data dacpac
-      - name: Azure SQL Deploy
-        uses: Azure/sql-action@v1
-        with:
-          # Name of the SQL Server name
-          server-name: '${{ secrets.AZURESQLDB_SERVER }}'
-          # The connection string, including authentication information, for the SQL Server database.
-          connection-string: '${{ secrets.AZURESQLDB_CONNECTION_STRING }}'
-          # Path to DACPAC file. *.dacpac or a folder to deploy
-          dacpac-package: 'AzureSQLDB.dacpac'
-          # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
-          arguments: '/p:IncludeCompositeObjects=true' 
+#   # Production job
+#   DeployAzureSQLDB:
+#     # Set the dependency for the build job
+#     needs: BuildAzureSQLDB
+#     # The type of runner that the job will run on
+#     runs-on: self-hosted
+#         # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       - name: download Data artifact
+#         # Dowloads Data artifact to dacpac folder
+#         uses: actions/download-artifact@v2.0.10
+#         with:
+#           name: AzureSQLDB
+#       # Installs UnitTesting-Data dacpac
+#       - name: Azure SQL Deploy
+#         uses: Azure/sql-action@v1
+#         with:
+#           # Name of the SQL Server name
+#           server-name: '${{ secrets.AZURESQLDB_SERVER }}'
+#           # The connection string, including authentication information, for the SQL Server database.
+#           connection-string: '${{ secrets.AZURESQLDB_CONNECTION_STRING }}'
+#           # Path to DACPAC file. *.dacpac or a folder to deploy
+#           dacpac-package: 'AzureSQLDB.dacpac'
+#           # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
+#           arguments: '/p:IncludeCompositeObjects=true' 
 
-# Build dacpac for Azure SQL Pool
-  BuildAzureSQLPool:
-    # Set the dependency for the build job
-    needs: _Integration
-    # The type of runner that the job will run on
-    runs-on: self-hosted
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      # Find msbuild
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.3
-      # Sync Git repository
-      - name: Copy files and replace DSP
-        run: |
-            # copy files
-            md AzureSQLPoolstaging
-            Copy-Item -Path UnitTesting-Data\* -Destination AzureSQLPoolstaging -Recurse
-            # replace DSP
-            cd AzureSQLPoolstaging
-            $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
-            $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlDwDatabaseSchemaProvider'
-            rename-item UnitTesting-Data.sqlproj AzureSQLPool.sqlproj
-            rename-item UnitTesting-Data.publish.xml AzureSQLPool.publish.xml
-            (Get-Content "AzureSQLPool.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureSQLPool.sqlproj"
+# # Build dacpac for Azure SQL Pool
+#   BuildAzureSQLPool:
+#     # Set the dependency for the build job
+#     needs: _Integration
+#     # The type of runner that the job will run on
+#     runs-on: self-hosted
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - uses: actions/checkout@v2
+#       # Find msbuild
+#       - name: Add msbuild to PATH
+#         uses: microsoft/setup-msbuild@v1.0.3
+#       # Sync Git repository
+#       - name: Copy files and replace DSP
+#         run: |
+#             # copy files
+#             md AzureSQLPoolstaging
+#             Copy-Item -Path UnitTesting-Data\* -Destination AzureSQLPoolstaging -Recurse
+#             # replace DSP
+#             cd AzureSQLPoolstaging
+#             $Old_DSP = 'Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider'
+#             $New_DSP = 'Microsoft.Data.Tools.Schema.Sql.SqlDwDatabaseSchemaProvider'
+#             rename-item UnitTesting-Data.sqlproj AzureSQLPool.sqlproj
+#             rename-item UnitTesting-Data.publish.xml AzureSQLPool.publish.xml
+#             (Get-Content "AzureSQLPool.sqlproj") -replace $Old_DSP, $New_DSP  | Set-Content "AzureSQLPool.sqlproj"
  
-      # create dacpac using MSBUILD
-      - name: Build Unitesting-Data project
-        run: |
-          cd AzureSQLPoolstaging
-          msbuild.exe AzureSQLPool.sqlproj /p:Configuration=Release  
+#       # create dacpac using MSBUILD
+#       - name: Build Unitesting-Data project
+#         run: |
+#           cd AzureSQLPoolstaging
+#           msbuild.exe AzureSQLPool.sqlproj /p:Configuration=Release  
 
-      # Publish Unitesting-Data artifact
-      - uses: actions/upload-artifact@v2.2.4
-        with:
-          name: AzureSQLPool
-          path: ${{ github.workspace }}/AzureSQLPoolstaging/bin/Release/ 
+#       # Publish Unitesting-Data artifact
+#       - uses: actions/upload-artifact@v2.2.4
+#         with:
+#           name: AzureSQLPool
+#           path: ${{ github.workspace }}/AzureSQLPoolstaging/bin/Release/ 
 
-  # Deploy Azure SQL Pool job
-  DeploySQLPool:
-    # Set the dependency for the build job
-    needs: BuildAzureSQLPool
-    # The type of runner that the job will run on
-    runs-on: self-hosted
-        # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      - name: download Data artifact
-        # Dowloads Data artifact to dacpac folder
-        uses: actions/download-artifact@v2.0.10
-        with:
-          name: AzureSQLPool
-      # Installs UnitTesting-Data dacpac
-      - name: Azure SQL Deploy
-        uses: Azure/sql-action@v1
-        with:
-          # Name of the SQL Server name
-          server-name: '${{ secrets.SYNAPSE_ENDPOINT }}'
-          # The connection string, including authentication information, for the SQL Server database.
-          connection-string: '${{ secrets.AZURESQLPOOL_CONNECTION_STRING }}'
-          # Path to DACPAC file. *.dacpac or a folder to deploy
-          dacpac-package: 'AzureSQLPool.dacpac'
-          # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
-          arguments: '/p:IncludeCompositeObjects=true' 
+#   # Deploy Azure SQL Pool job
+#   DeploySQLPool:
+#     # Set the dependency for the build job
+#     needs: BuildAzureSQLPool
+#     # The type of runner that the job will run on
+#     runs-on: self-hosted
+#         # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       - name: download Data artifact
+#         # Dowloads Data artifact to dacpac folder
+#         uses: actions/download-artifact@v2.0.10
+#         with:
+#           name: AzureSQLPool
+#       # Installs UnitTesting-Data dacpac
+#       - name: Azure SQL Deploy
+#         uses: Azure/sql-action@v1
+#         with:
+#           # Name of the SQL Server name
+#           server-name: '${{ secrets.SYNAPSE_ENDPOINT }}'
+#           # The connection string, including authentication information, for the SQL Server database.
+#           connection-string: '${{ secrets.AZURESQLPOOL_CONNECTION_STRING }}'
+#           # Path to DACPAC file. *.dacpac or a folder to deploy
+#           dacpac-package: 'AzureSQLPool.dacpac'
+#           # In case DACPAC option is selected, additional SqlPackage.exe arguments that will be applied. When SQL query option is selected, additional sqlcmd.exe arguments will be applied.
+#           arguments: '/p:IncludeCompositeObjects=true' 
